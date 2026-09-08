@@ -1,6 +1,7 @@
 [workspace]
 members = [
-    "crates/aetheria-core"
+    "crates/aetheria-core",
+    "apps/aetheria-daemon"
 ]
 resolver = "2"
 
