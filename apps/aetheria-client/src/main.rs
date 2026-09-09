@@ -118,4 +118,3 @@ async fn render_stratified_ui() -> Html<&'static str> {
 </html>
     "#)
 }
-
