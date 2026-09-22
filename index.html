@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aetheria - 文明OS / AI Swarm Core</title>
+    <title>Aetheria OS - 次世代文明・AI Swarm Matrix</title>
     <style>
         * {
             margin: 0;
@@ -12,113 +12,146 @@
         }
 
         body {
-            background-color: #05050a;
-            color: #f1f5f9;
+            background-color: #030308;
+            color: #f8fafc;
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            overflow: hidden;
+            overflow-x: hidden;
             position: relative;
         }
 
-        /* 呼吸する背景のオーラ */
+        /* 呼吸する宇宙のオーラ（バイオ・パルス同調） */
         .ambient-glow {
             position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, rgba(59, 130, 246, 0.05) 50%, transparent 100%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.22) 0%, rgba(59, 130, 246, 0.08) 50%, transparent 100%);
             border-radius: 50%;
             animation: breathe 8s ease-in-out infinite;
             z-index: 1;
+            top: 10vh;
         }
 
-        /* AIスウォーム・コア（心臓部） */
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.25); opacity: 1; filter: drop-shadow(0 0 40px rgba(168, 85, 247, 0.6)); }
+        }
+
+        /* ヘッダー情報 */
+        .header-container {
+            margin-top: 4vh;
+            text-align: center;
+            z-index: 3;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            letter-spacing: 0.2em;
+            font-weight: 300;
+            background: linear-gradient(135deg, #e879f9, #60a5fa, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(168, 85, 247, 0.4);
+        }
+
+        .system-status {
+            font-size: 0.75rem;
+            color: #93c5fd;
+            letter-spacing: 0.15em;
+            margin-top: 6px;
+            text-transform: uppercase;
+        }
+
+        /* 神経網 AIスウォーム・コア（心臓部） */
         .core-container {
-            margin-top: 15vh;
             position: relative;
-            width: 220px;
-            height: 220px;
+            width: 240px;
+            height: 240px;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 2;
+            z-index: 3;
+            margin: 2vh 0;
         }
 
         .core-orb {
             position: absolute;
-            width: 180px;
-            height: 180px;
-            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            width: 170px;
+            height: 170px;
+            background: radial-gradient(circle, #c084fc 0%, #3b82f6 70%, #1e1b4b 100%);
             border-radius: 50%;
-            box-shadow: 0 0 60px rgba(168, 85, 247, 0.4), inset 0 0 25px rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.5), inset 0 0 25px rgba(255, 255, 255, 0.6);
             animation: breathe 8s ease-in-out infinite;
         }
 
-        .core-ring {
+        .core-ring-1 {
             position: absolute;
             width: 220px;
             height: 220px;
-            border: 1px dashed rgba(168, 85, 247, 0.4);
+            border: 1px dashed rgba(192, 132, 252, 0.4);
             border-radius: 50%;
-            animation: rotate 20s linear infinite;
+            animation: rotateClockwise 25s linear infinite;
         }
 
-        @keyframes breathe {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 0.8;
-                box-shadow: 0 0 50px rgba(168, 85, 247, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.4);
-            }
-            50% {
-                transform: scale(1.18);
-                opacity: 1;
-                box-shadow: 0 0 90px rgba(59, 130, 246, 0.7), inset 0 0 35px rgba(255, 255, 255, 0.7);
-            }
+        .core-ring-2 {
+            position: absolute;
+            width: 260px;
+            height: 260px;
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            border-radius: 50%;
+            animation: rotateCounter 35s linear infinite;
         }
 
-        @keyframes rotate {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes rotateClockwise { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes rotateCounter { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
+
+        /* ワンタップ・インテント（意志の種子）選択エリア */
+        .presets-container {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 650px;
+            z-index: 3;
+            margin-bottom: 12px;
+            padding: 0 10px;
         }
 
-        /* ヘッダー情報 */
-        .header-info {
-            text-align: center;
-            z-index: 2;
-            margin-top: 20px;
+        .preset-chip {
+            background: rgba(30, 41, 59, 0.6);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 0.75rem;
+            color: #cbd5e1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(8px);
         }
 
-        h1 {
-            font-size: 1.6rem;
-            letter-spacing: 0.15em;
-            font-weight: 300;
-            background: linear-gradient(90deg, #c084fc, #60a5fa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .preset-chip:hover {
+            background: rgba(168, 85, 247, 0.25);
+            border-color: #c084fc;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.4);
         }
 
-        .status {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            letter-spacing: 0.1em;
-            margin-top: 6px;
-        }
-
-        /* 意志入力・スウォーム制御エリア */
+        /* ターミナル＆入力コントロールボックス */
         .terminal-box {
             width: 90%;
-            max-width: 600px;
-            margin-bottom: 8vh;
+            max-width: 640px;
+            margin-bottom: 5vh;
             z-index: 3;
-            background: rgba(15, 23, 42, 0.75);
-            border: 1px solid rgba(168, 85, 247, 0.3);
-            border-radius: 16px;
-            padding: 16px;
-            backdrop-filter: blur(12px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            background: rgba(10, 15, 30, 0.85);
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            border-radius: 18px;
+            padding: 18px;
+            backdrop-filter: blur(16px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(168, 85, 247, 0.1);
         }
 
         .input-group {
@@ -128,10 +161,10 @@
 
         input[type="text"] {
             flex: 1;
-            background: rgba(30, 41, 59, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 12px 16px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            padding: 14px 18px;
             color: #fff;
             font-size: 0.95rem;
             outline: none;
@@ -139,33 +172,62 @@
         }
 
         input[type="text"]:focus {
-            border-color: #a855f7;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+            border-color: #c084fc;
+            box-shadow: 0 0 20px rgba(192, 132, 252, 0.4);
         }
 
-        button {
+        .action-btn {
             background: linear-gradient(135deg, #a855f7, #3b82f6);
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
-            padding: 0 20px;
+            padding: 0 24px;
             font-weight: 600;
+            font-size: 0.95rem;
             cursor: pointer;
-            transition: opacity 0.3s;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
         }
 
-        button:hover {
+        .action-btn:hover {
             opacity: 0.9;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
         }
 
-        .log-output {
-            margin-top: 12px;
-            font-family: monospace;
-            font-size: 0.8rem;
-            color: #cbd5e1;
-            min-height: 24px;
-            max-height: 60px;
+        /* マルチエージェント・ギルド ライブログ */
+        .guild-logs {
+            margin-top: 14px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.78rem;
+            color: #94a3b8;
+            background: rgba(2, 6, 23, 0.8);
+            border-left: 3px solid #a855f7;
+            padding: 10px 14px;
+            border-radius: 0 8px 8px 0;
+            min-height: 50px;
+            max-height: 90px;
             overflow-y: auto;
+            line-height: 1.5;
+        }
+
+        .manifest-link {
+            margin-top: 10px;
+            display: none;
+            text-align: center;
+        }
+
+        .manifest-link a {
+            color: #38bdf8;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-bottom: 1px dashed #38bdf8;
+            transition: color 0.2s;
+        }
+
+        .manifest-link a:hover {
+            color: #7dd3fc;
         }
     </style>
 </head>
@@ -173,44 +235,76 @@
 
     <div class="ambient-glow"></div>
 
+    <div class="header-container">
+        <h1>AETHERIA OS</h1>
+        <p class="system-status" id="systemStatus">Hyper-Swarm Guilds: Online / Ecosystem Synchronized</p>
+    </div>
+
     <div class="core-container">
-        <div class="core-ring"></div>
+        <div class="core-ring-2"></div>
+        <div class="core-ring-1"></div>
         <div class="core-orb" id="coreOrb"></div>
     </div>
 
-    <div class="header-info">
-        <h1>AETHERIA OS</h1>
-        <p class="status" id="statusText">AI Swarm 工場：待機中（生態系リズム同調）</p>
+    <!-- ワンタップ・インテント（意志の種子） -->
+    <div class="presets-container">
+        <div class="preset-chip" onclick="setIntent('次世代分散型経済圏の構築')">💎 経済圏の構築</div>
+        <div class="preset-chip" onclick="setIntent('AIエージェントスウォーム工場の全自動拡張')">🤖 スウォーム工場拡張</div>
+        <div class="preset-chip" onclick="setIntent('Xを超える完全自律型文明プラットフォームの具現化')">⚡ 文明OSの拡張</div>
+        <div class="preset-chip" onclick="setIntent('地球規模の生態系共鳴ネットワーク接続')">🌍 生態系ネットワーク</div>
     </div>
 
     <div class="terminal-box">
         <div class="input-group">
-            <input type="text" id="intentInput" placeholder="あなたの意志や願いを入力（例：新しい経済圏を構築する）...">
-            <button onclick="activateSwarm()">発現</button>
+            <input type="text" id="intentInput" placeholder="あなたの意志や願いを投下（例：新しい世界線を創造する）...">
+            <button class="action-btn" onclick="activateMatrix()">発現</button>
         </div>
-        <div class="log-output" id="logOutput">System Ready. エージェントネットワーク接続済み。</div>
+        <div class="guild-logs" id="logOutput">
+            [System] 接続完了。Parser / Architect / Economist ギルド待機中。
+        </div>
+        <div class="manifest-link" id="manifestLinkContainer">
+            <a href="#" id="manifestUrl" target="_blank">✨ 生成された現実ポータル空間へアクセス [Dispatch Success]</a>
+        </div>
     </div>
 
     <script>
-        function activateSwarm() {
+        function setIntent(text) {
+            document.getElementById('intentInput').value = text;
+        }
+
+        function activateMatrix() {
             const input = document.getElementById('intentInput');
-            const status = document.getElementById('statusText');
+            const status = document.getElementById('systemStatus');
             const log = document.getElementById('logOutput');
             const orb = document.getElementById('coreOrb');
+            const linkContainer = document.getElementById('manifestLinkContainer');
+            const link = document.getElementById('manifestUrl');
 
-            if (!input.value.trim()) return;
+            const val = input.value.trim();
+            if (!val) return;
 
-            // 工場稼働演出
-            status.textContent = "AI Swarm 工場：全自動稼働中（意志を具現化中...）";
-            log.innerHTML = `> 意志を受信: "${input.value}"<br>> スウォームエージェントが展開し、構造設計を開始...`;
-            
-            // コアを激しく脈動させる
-            orb.style.animationDuration = '1.5s';
+            // 演出開始：コア激動
+            status.textContent = "Processing: Multi-Guild Swarm Active...";
+            orb.style.animationDuration = '1.2s';
+            linkContainer.style.display = 'none';
+
+            // 段階的エージェント稼働ログ
+            log.innerHTML = `> [Parser] 意志受信: "${val}"<br>> [Architect] Rustコアシステム＆コンポーネント構造解析中...`;
 
             setTimeout(() => {
-                log.innerHTML += `<br>> [完了] プラットフォームの生成に成功しました。`;
-                status.textContent = "AI Swarm 工場：稼働完了（文明拡張中）";
+                log.innerHTML += `<br>> [Economist] 価値循環・エネルギー分散処理を実行中...`;
+            }, 1000);
+
+            setTimeout(() => {
+                log.innerHTML += `<br>> [Dispatch] クラウドインフラへの自動デプロイ成功。現実化完了。`;
+                status.textContent = "Hyper-Swarm Guilds: Manifestation Complete";
                 orb.style.animationDuration = '8s';
+                
+                // 動的URL発行演出
+                link.href = "#";
+                link.textContent = `✨ 新規生成ポータル: aetheria.matrix/${Math.random().toString(36.substring(2, 8))}`;
+                linkContainer.style.display = 'block';
+                
                 input.value = '';
             }, 3000);
         }
