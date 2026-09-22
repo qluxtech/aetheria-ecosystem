@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aetheria OS - 次世代文明・AI Swarm Matrix</title>
+    <title>Aetheria OS - Civilization Matrix</title>
     <style>
         * {
             margin: 0;
@@ -11,149 +11,157 @@
             box-sizing: border-box;
         }
 
-        body {
-            background-color: #020205;
+        html, body {
+            width: 100%;
+            height: 100%;
+            background-color: #010104;
             color: #f8fafc;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden; /* スクロールを完全になくし1画面に収める */
             position: relative;
         }
 
-        /* 呼吸する宇宙のオーラ（バイオ・パルス同調） */
+        /* 呼吸する宇宙のオーラ */
         .ambient-glow {
             position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 100vw;
             height: 100vh;
-            background: radial-gradient(circle at 50% 30%, rgba(168, 85, 247, 0.18) 0%, rgba(59, 130, 246, 0.06) 50%, transparent 80%);
+            background: radial-gradient(circle at 50% 40%, rgba(168, 85, 247, 0.22) 0%, rgba(59, 130, 246, 0.08) 50%, transparent 75%);
             pointer-events: none;
-            animation: breathe 8s ease-in-out infinite;
+            animation: breathe 9s ease-in-out infinite;
             z-index: 1;
         }
 
         @keyframes breathe {
-            0%, 100% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 60px rgba(168, 85, 247, 0.5)); }
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+            50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.95; }
+        }
+
+        /* 全体を一画面に美しく配置するコンテナ */
+        .os-container {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly; /* 隙間を均等割付して見切れを防止 */
+            align-items: center;
+            padding: 12px 16px;
         }
 
         /* ヘッダー情報 */
         .header-container {
-            margin-top: 3vh;
             text-align: center;
-            z-index: 3;
-            width: 100%;
-            padding: 0 16px;
         }
 
         h1 {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             letter-spacing: 0.25em;
             font-weight: 300;
-            background: linear-gradient(135deg, #e879f9, #60a5fa, #c084fc);
+            background: linear-gradient(135deg, #f0abfc, #60a5fa, #e879f9);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
+            text-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
         }
 
         .system-status {
-            font-size: 0.68rem;
+            font-size: 0.6rem;
             color: #93c5fd;
-            letter-spacing: 0.12em;
-            margin-top: 4px;
+            letter-spacing: 0.15em;
+            margin-top: 3px;
             text-transform: uppercase;
+            opacity: 0.85;
         }
 
-        /* 神経網 AIスウォーム・コア（心臓部） */
+        /* 神経網 AIスウォーム・コア（サイズ最適化） */
         .core-container {
             position: relative;
-            width: 200px;
-            height: 200px;
+            width: 160px;
+            height: 160px;
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 3;
-            margin: 1vh 0;
         }
 
         .core-orb {
             position: absolute;
-            width: 140px;
-            height: 140px;
-            background: radial-gradient(circle, #c084fc 0%, #3b82f6 70%, #1e1b4b 100%);
+            width: 110px;
+            height: 110px;
+            background: radial-gradient(circle, #d8b4fe 0%, #3b82f6 65%, #0f172a 100%);
             border-radius: 50%;
-            box-shadow: 0 0 40px rgba(168, 85, 247, 0.5), inset 0 0 20px rgba(255, 255, 255, 0.6);
-            animation: breathe 8s ease-in-out infinite;
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.7);
+            animation: breatheOrb 9s ease-in-out infinite;
         }
 
         .core-ring-1 {
             position: absolute;
-            width: 180px;
-            height: 180px;
-            border: 1px dashed rgba(192, 132, 252, 0.4);
+            width: 135px;
+            height: 135px;
+            border: 1px dashed rgba(216, 180, 254, 0.5);
             border-radius: 50%;
-            animation: rotateClockwise 25s linear infinite;
+            animation: rotateClockwise 30s linear infinite;
         }
 
         .core-ring-2 {
             position: absolute;
-            width: 210px;
-            height: 210px;
-            border: 1px solid rgba(96, 165, 250, 0.2);
+            width: 160px;
+            height: 160px;
+            border: 1px solid rgba(96, 165, 250, 0.25);
             border-radius: 50%;
-            animation: rotateCounter 35s linear infinite;
+            animation: rotateCounter 40s linear infinite;
+        }
+
+        @keyframes breatheOrb {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.18); }
         }
 
         @keyframes rotateClockwise { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes rotateCounter { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
 
-        /* ワンタップ・インテント（意志の種子）選択エリア */
+        /* ワンタップ・インテント */
         .presets-container {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
             justify-content: center;
             width: 100%;
-            max-width: 500px;
-            z-index: 3;
-            margin-bottom: 10px;
-            padding: 0 16px;
+            max-width: 400px;
         }
 
         .preset-chip {
-            background: rgba(30, 41, 59, 0.7);
-            border: 1px solid rgba(168, 85, 247, 0.3);
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(168, 85, 247, 0.35);
             border-radius: 16px;
-            padding: 5px 12px;
-            font-size: 0.7rem;
+            padding: 5px 10px;
+            font-size: 0.68rem;
             color: #cbd5e1;
             cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(8px);
+            transition: all 0.2s ease;
+            backdrop-filter: blur(10px);
         }
 
         .preset-chip:hover, .preset-chip:active {
-            background: rgba(168, 85, 247, 0.3);
-            border-color: #c084fc;
+            background: rgba(168, 85, 247, 0.35);
+            border-color: #e879f9;
             color: #fff;
-            box-shadow: 0 0 10px rgba(168, 85, 247, 0.5);
+            box-shadow: 0 0 12px rgba(168, 85, 247, 0.6);
         }
 
-        /* ターミナル＆入力コントロールボックス（スマホ完全対応版） */
+        /* ターミナル＆コントロールボックス（コンパクトかつ高機能） */
         .terminal-box {
-            width: 92%;
-            max-width: 500px;
-            margin-bottom: 3vh;
-            z-index: 3;
-            background: rgba(8, 12, 24, 0.9);
-            border: 1px solid rgba(168, 85, 247, 0.4);
+            width: 100%;
+            max-width: 400px;
+            background: rgba(5, 8, 20, 0.9);
+            border: 1px solid rgba(168, 85, 247, 0.45);
             border-radius: 16px;
-            padding: 14px;
-            backdrop-filter: blur(16px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), inset 0 0 15px rgba(168, 85, 247, 0.1);
+            padding: 12px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.85);
         }
 
         .input-group {
@@ -162,74 +170,60 @@
             gap: 8px;
         }
 
-        @media (min-width: 480px) {
-            .input-group {
-                flex-direction: row;
-            }
-        }
-
         input[type="text"] {
-            flex: 1;
-            background: rgba(15, 23, 42, 0.95);
+            width: 100%;
+            background: rgba(10, 15, 30, 0.95);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 10px;
-            padding: 12px 14px;
+            padding: 10px 14px;
             color: #fff;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             outline: none;
             transition: all 0.3s;
-            width: 100%;
         }
 
         input[type="text"]:focus {
             border-color: #c084fc;
-            box-shadow: 0 0 15px rgba(192, 132, 252, 0.4);
+            box-shadow: 0 0 15px rgba(192, 132, 252, 0.5);
         }
 
         .action-btn {
+            width: 100%;
             background: linear-gradient(135deg, #a855f7, #3b82f6);
             border: none;
             border-radius: 10px;
             color: white;
-            padding: 12px 20px;
+            padding: 10px 16px;
             font-weight: 600;
             font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
-            width: 100%;
-        }
-
-        @media (min-width: 480px) {
-            .action-btn {
-                width: auto;
-            }
+            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.45);
         }
 
         .action-btn:hover, .action-btn:active {
-            opacity: 0.9;
+            opacity: 0.95;
             transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(59, 130, 246, 0.6);
         }
 
-        /* マルチエージェント・ギルド ライブログ */
+        /* ライブログ */
         .guild-logs {
-            margin-top: 10px;
+            margin-top: 8px;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 0.74rem;
+            font-size: 0.7rem;
             color: #94a3b8;
-            background: rgba(2, 6, 23, 0.85);
-            border-left: 3px solid #a855f7;
-            padding: 8px 12px;
+            background: rgba(2, 4, 15, 0.9);
+            border-left: 3px solid #c084fc;
+            padding: 8px 10px;
             border-radius: 0 6px 6px 0;
-            min-height: 44px;
-            max-height: 75px;
+            min-height: 38px;
+            max-height: 65px;
             overflow-y: auto;
             line-height: 1.4;
         }
 
         .manifest-link {
-            margin-top: 8px;
+            margin-top: 6px;
             display: none;
             text-align: center;
         }
@@ -237,14 +231,9 @@
         .manifest-link a {
             color: #38bdf8;
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 600;
             border-bottom: 1px dashed #38bdf8;
-            transition: color 0.2s;
-        }
-
-        .manifest-link a:hover {
-            color: #7dd3fc;
         }
     </style>
 </head>
@@ -252,35 +241,36 @@
 
     <div class="ambient-glow"></div>
 
-    <div class="header-container">
-        <h1>AETHERIA OS</h1>
-        <p class="system-status" id="systemStatus">Hyper-Swarm Guilds: Online / Ecosystem Synchronized</p>
-    </div>
-
-    <div class="core-container">
-        <div class="core-ring-2"></div>
-        <div class="core-ring-1"></div>
-        <div class="core-orb" id="coreOrb"></div>
-    </div>
-
-    <!-- ワンタップ・インテント（意志の種子） -->
-    <div class="presets-container">
-        <div class="preset-chip" onclick="setIntent('次世代分散型経済圏の構築')">💎 経済圏構築</div>
-        <div class="preset-chip" onclick="setIntent('AIエージェントスウォーム工場の全自動拡張')">🤖 工場拡張</div>
-        <div class="preset-chip" onclick="setIntent('Xを超える完全自律型文明プラットフォームの具現化')">⚡ 文明OS拡張</div>
-        <div class="preset-chip" onclick="setIntent('地球規模の生態系共鳴ネットワーク接続')">🌍 生態系接続</div>
-    </div>
-
-    <div class="terminal-box">
-        <div class="input-group">
-            <input type="text" id="intentInput" placeholder="あなたの意志や願いを投下...">
-            <button class="action-btn" onclick="activateMatrix()">発現</button>
+    <div class="os-container">
+        <div class="header-container">
+            <h1>AETHERIA OS</h1>
+            <p class="system-status" id="systemStatus">Hyper-Swarm Guilds: Online / Synced</p>
         </div>
-        <div class="guild-logs" id="logOutput">
-            [System] 接続完了。Parser / Architect / Economist ギルド待機中。
+
+        <div class="core-container">
+            <div class="core-ring-2"></div>
+            <div class="core-ring-1"></div>
+            <div class="core-orb" id="coreOrb"></div>
         </div>
-        <div class="manifest-link" id="manifestLinkContainer">
-            <a href="#" id="manifestUrl" target="_blank">✨ 生成された現実ポータル空間へアクセス [Dispatch]</a>
+
+        <div class="presets-container">
+            <div class="preset-chip" onclick="setIntent('次世代分散型経済圏の構築')">💎 経済圏構築</div>
+            <div class="preset-chip" onclick="setIntent('AIエージェントスウォーム工場の全自動拡張')">🤖 工場拡張</div>
+            <div class="preset-chip" onclick="setIntent('Xを超える完全自律型文明プラットフォームの具現化')">⚡ 文明OS拡張</div>
+            <div class="preset-chip" onclick="setIntent('地球規模の生態系共鳴ネットワーク接続')">🌍 生態系接続</div>
+        </div>
+
+        <div class="terminal-box">
+            <div class="input-group">
+                <input type="text" id="intentInput" placeholder="あなたの意志や願いを投下...">
+                <button class="action-btn" onclick="activateMatrix()">発現</button>
+            </div>
+            <div class="guild-logs" id="logOutput">
+                [System] 接続完了。Parser / Architect / Economist ギルド待機中。
+            </div>
+            <div class="manifest-link" id="manifestLinkContainer">
+                <a href="#" id="manifestUrl" target="_blank">✨ 生成された現実ポータル空間へアクセス [Dispatch]</a>
+            </div>
         </div>
     </div>
 
@@ -300,32 +290,26 @@
             const val = input.value.trim();
             if (!val) return;
 
-            // 演出開始：コア激動
             status.textContent = "Processing: Multi-Guild Swarm Active...";
-            orb.style.animationDuration = '1.2s';
             linkContainer.style.display = 'none';
 
-            // 段階的エージェント稼働ログ
             log.innerHTML = `> [Parser] 意志受信: "${val}"<br>> [Architect] Rustコアシステム解析中...`;
 
             setTimeout(() => {
                 log.innerHTML += `<br>> [Economist] 価値循環・エネルギー分散処理中...`;
-            }, 900);
+            }, 700);
 
             setTimeout(() => {
                 log.innerHTML += `<br>> [Dispatch] 自動デプロイ成功。現実化完了。`;
                 status.textContent = "Hyper-Swarm Guilds: Manifestation Complete";
-                orb.style.animationDuration = '8s';
                 
-                // 動的URL発行演出
                 link.href = "#";
                 link.textContent = `✨ 新規生成ポータル: aetheria.matrix/${Math.random().toString(36).substring(2, 8)}`;
                 linkContainer.style.display = 'block';
                 
                 input.value = '';
-            }, 2500);
+            }, 1800);
         }
     </script>
 </body>
 </html>
-
