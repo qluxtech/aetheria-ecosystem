@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aetheria - エーテリア生態系</title>
+    <title>Aetheria - 文明OS / AI Swarm Core</title>
     <style>
         * {
             margin: 0;
@@ -12,110 +12,209 @@
         }
 
         body {
-            background-color: #0b0f19;
-            color: #e2e8f0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #05050a;
+            color: #f1f5f9;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             min-height: 100vh;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
             overflow: hidden;
             position: relative;
         }
 
-        /* 呼吸するように拡大縮小・明滅する背景の光 */
+        /* 呼吸する背景のオーラ */
         .ambient-glow {
             position: absolute;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(14, 116, 144, 0.05) 60%, transparent 100%);
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.2) 0%, rgba(59, 130, 246, 0.05) 50%, transparent 100%);
             border-radius: 50%;
             animation: breathe 8s ease-in-out infinite;
             z-index: 1;
         }
 
-        /* メインの呼吸する円オブジェクト */
-        .core-orb {
+        /* AIスウォーム・コア（心臓部） */
+        .core-container {
+            margin-top: 15vh;
             position: relative;
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(135deg, #38bdf8, #0284c7);
-            border-radius: 50%;
-            box-shadow: 0 0 50px rgba(56, 189, 248, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.4);
-            animation: breathe 8s ease-in-out infinite;
+            width: 220px;
+            height: 220px;
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 2;
         }
 
-        .core-orb::after {
-            content: '';
+        .core-orb {
             position: absolute;
-            width: 160px;
-            height: 160px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
             border-radius: 50%;
-            animation: pulse-ring 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            box-shadow: 0 0 60px rgba(168, 85, 247, 0.4), inset 0 0 25px rgba(255, 255, 255, 0.5);
+            animation: breathe 8s ease-in-out infinite;
         }
 
-        /* 呼吸のアニメーション定義 (吸って、止めて、吐いて、止めるのゆったりしたリズム) */
+        .core-ring {
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border: 1px dashed rgba(168, 85, 247, 0.4);
+            border-radius: 50%;
+            animation: rotate 20s linear infinite;
+        }
+
         @keyframes breathe {
             0%, 100% {
                 transform: scale(1);
-                opacity: 0.7;
-            }
-            50% {
-                transform: scale(1.25);
-                opacity: 1;
-                box-shadow: 0 0 80px rgba(56, 189, 248, 0.7), inset 0 0 30px rgba(255, 255, 255, 0.6);
-            }
-        }
-
-        @keyframes pulse-ring {
-            0%, 100% {
-                transform: scale(0.95);
-                opacity: 0.3;
-            }
-            50% {
-                transform: scale(1.15);
                 opacity: 0.8;
+                box-shadow: 0 0 50px rgba(168, 85, 247, 0.4), inset 0 0 20px rgba(255, 255, 255, 0.4);
+            }
+            50% {
+                transform: scale(1.18);
+                opacity: 1;
+                box-shadow: 0 0 90px rgba(59, 130, 246, 0.7), inset 0 0 35px rgba(255, 255, 255, 0.7);
             }
         }
 
-        .content {
-            position: absolute;
-            bottom: 15%;
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ヘッダー情報 */
+        .header-info {
             text-align: center;
-            z-index: 3;
+            z-index: 2;
+            margin-top: 20px;
         }
 
         h1 {
-            font-size: 1.8rem;
-            letter-spacing: 0.1em;
-            margin-bottom: 8px;
-            font-weight: 400;
-            color: #f8fafc;
+            font-size: 1.6rem;
+            letter-spacing: 0.15em;
+            font-weight: 300;
+            background: linear-gradient(90deg, #c084fc, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        p {
-            font-size: 0.95rem;
+        .status {
+            font-size: 0.85rem;
             color: #94a3b8;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.1em;
+            margin-top: 6px;
+        }
+
+        /* 意志入力・スウォーム制御エリア */
+        .terminal-box {
+            width: 90%;
+            max-width: 600px;
+            margin-bottom: 8vh;
+            z-index: 3;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 16px;
+            padding: 16px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #a855f7;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+        }
+
+        button {
+            background: linear-gradient(135deg, #a855f7, #3b82f6);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            padding: 0 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .log-output {
+            margin-top: 12px;
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            min-height: 24px;
+            max-height: 60px;
+            overflow-y: auto;
         }
     </style>
 </head>
 <body>
 
     <div class="ambient-glow"></div>
-    
-    <div class="core-orb"></div>
 
-    <div class="content">
-        <h1>Aetheria</h1>
-        <p>生態系リズム — 呼吸中...</p>
+    <div class="core-container">
+        <div class="core-ring"></div>
+        <div class="core-orb" id="coreOrb"></div>
     </div>
 
+    <div class="header-info">
+        <h1>AETHERIA OS</h1>
+        <p class="status" id="statusText">AI Swarm 工場：待機中（生態系リズム同調）</p>
+    </div>
+
+    <div class="terminal-box">
+        <div class="input-group">
+            <input type="text" id="intentInput" placeholder="あなたの意志や願いを入力（例：新しい経済圏を構築する）...">
+            <button onclick="activateSwarm()">発現</button>
+        </div>
+        <div class="log-output" id="logOutput">System Ready. エージェントネットワーク接続済み。</div>
+    </div>
+
+    <script>
+        function activateSwarm() {
+            const input = document.getElementById('intentInput');
+            const status = document.getElementById('statusText');
+            const log = document.getElementById('logOutput');
+            const orb = document.getElementById('coreOrb');
+
+            if (!input.value.trim()) return;
+
+            // 工場稼働演出
+            status.textContent = "AI Swarm 工場：全自動稼働中（意志を具現化中...）";
+            log.innerHTML = `> 意志を受信: "${input.value}"<br>> スウォームエージェントが展開し、構造設計を開始...`;
+            
+            // コアを激しく脈動させる
+            orb.style.animationDuration = '1.5s';
+
+            setTimeout(() => {
+                log.innerHTML += `<br>> [完了] プラットフォームの生成に成功しました。`;
+                status.textContent = "AI Swarm 工場：稼働完了（文明拡張中）";
+                orb.style.animationDuration = '8s';
+                input.value = '';
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
 
