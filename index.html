@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aetheria OS - Civilization Matrix</title>
+    <title>Aetheria OS - Global Zenith Matrix</title>
     <style>
         * {
             margin: 0;
@@ -14,14 +14,25 @@
         html, body {
             width: 100%;
             height: 100%;
-            background-color: #010104;
+            background-color: #000208;
             color: #f8fafc;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            overflow: hidden; /* スクロールを完全になくし1画面に収める */
+            overflow: hidden;
             position: relative;
         }
 
-        /* 呼吸する宇宙のオーラ */
+        /* リアルタイム背景パーティクルキャンバス */
+        #matrixCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 呼吸する宇宙のオーラ（1/fゆらぎ） */
         .ambient-glow {
             position: absolute;
             top: 50%;
@@ -29,28 +40,30 @@
             transform: translate(-50%, -50%);
             width: 100vw;
             height: 100vh;
-            background: radial-gradient(circle at 50% 40%, rgba(168, 85, 247, 0.22) 0%, rgba(59, 130, 246, 0.08) 50%, transparent 75%);
+            background: radial-gradient(circle at 50% 40%, rgba(168, 85, 247, 0.3) 0%, rgba(59, 130, 246, 0.12) 55%, transparent 80%);
             pointer-events: none;
-            animation: breathe 9s ease-in-out infinite;
-            z-index: 1;
+            animation: cosmicBreathe 12s ease-in-out infinite;
+            z-index: 2;
         }
 
-        @keyframes breathe {
+        @keyframes cosmicBreathe {
             0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-            50% { transform: translate(-50%, -50%) scale(1.15); opacity: 0.95; }
+            40% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.85; }
+            70% { transform: translate(-50%, -50%) scale(0.94); opacity: 0.5; }
         }
 
-        /* 全体を一画面に美しく配置するコンテナ */
+        /* 全体レイアウトコンテナ */
         .os-container {
             position: relative;
-            z-index: 3;
+            z-index: 5;
             width: 100%;
             height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-evenly; /* 隙間を均等割付して見切れを防止 */
+            justify-content: center;
             align-items: center;
-            padding: 12px 16px;
+            padding: 16px;
+            gap: 18px;
         }
 
         /* ヘッダー情報 */
@@ -59,29 +72,29 @@
         }
 
         h1 {
-            font-size: 1.3rem;
-            letter-spacing: 0.25em;
+            font-size: 1.45rem;
+            letter-spacing: 0.3em;
             font-weight: 300;
-            background: linear-gradient(135deg, #f0abfc, #60a5fa, #e879f9);
+            background: linear-gradient(135deg, #f5d0fe, #60a5fa, #e879f9);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
+            text-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
         }
 
         .system-status {
-            font-size: 0.6rem;
+            font-size: 0.62rem;
             color: #93c5fd;
-            letter-spacing: 0.15em;
-            margin-top: 3px;
+            letter-spacing: 0.2em;
+            margin-top: 4px;
             text-transform: uppercase;
             opacity: 0.85;
         }
 
-        /* 神経網 AIスウォーム・コア（サイズ最適化） */
+        /* 1/fゆらぎ・生体コアコンテナ */
         .core-container {
             position: relative;
-            width: 160px;
-            height: 160px;
+            width: 180px;
+            height: 180px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -89,141 +102,139 @@
 
         .core-orb {
             position: absolute;
-            width: 110px;
-            height: 110px;
-            background: radial-gradient(circle, #d8b4fe 0%, #3b82f6 65%, #0f172a 100%);
+            width: 125px;
+            height: 125px;
+            background: radial-gradient(circle, #f3e8ff 0%, #3b82f6 55%, #020617 100%);
             border-radius: 50%;
-            box-shadow: 0 0 40px rgba(168, 85, 247, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.7);
-            animation: breatheOrb 9s ease-in-out infinite;
+            box-shadow: 0 0 60px rgba(168, 85, 247, 0.7), inset 0 0 30px rgba(255, 255, 255, 0.9);
+            cursor: pointer;
+            transition: transform 0.1s ease;
         }
 
         .core-ring-1 {
             position: absolute;
-            width: 135px;
-            height: 135px;
-            border: 1px dashed rgba(216, 180, 254, 0.5);
+            width: 155px;
+            height: 155px;
+            border: 1px dashed rgba(216, 180, 254, 0.6);
             border-radius: 50%;
-            animation: rotateClockwise 30s linear infinite;
+            animation: rotateClockwise 25s linear infinite;
         }
 
         .core-ring-2 {
             position: absolute;
-            width: 160px;
-            height: 160px;
-            border: 1px solid rgba(96, 165, 250, 0.25);
+            width: 180px;
+            height: 180px;
+            border: 1px solid rgba(96, 165, 250, 0.35);
             border-radius: 50%;
-            animation: rotateCounter 40s linear infinite;
-        }
-
-        @keyframes breatheOrb {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.18); }
+            animation: rotateCounter 35s linear infinite;
         }
 
         @keyframes rotateClockwise { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes rotateCounter { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
 
-        /* ワンタップ・インテント */
+        /* ワンタップ・インテント（超洗練チップ） */
         .presets-container {
             display: flex;
-            gap: 6px;
+            gap: 8px;
             flex-wrap: wrap;
             justify-content: center;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
         }
 
         .preset-chip {
             background: rgba(15, 23, 42, 0.75);
-            border: 1px solid rgba(168, 85, 247, 0.35);
+            border: 1px solid rgba(168, 85, 247, 0.4);
             border-radius: 16px;
-            padding: 5px 10px;
-            font-size: 0.68rem;
+            padding: 6px 12px;
+            font-size: 0.72rem;
             color: #cbd5e1;
             cursor: pointer;
-            transition: all 0.2s ease;
-            backdrop-filter: blur(10px);
+            transition: all 0.25s ease;
+            backdrop-filter: blur(12px);
         }
 
         .preset-chip:hover, .preset-chip:active {
-            background: rgba(168, 85, 247, 0.35);
+            background: rgba(168, 85, 247, 0.4);
             border-color: #e879f9;
             color: #fff;
-            box-shadow: 0 0 12px rgba(168, 85, 247, 0.6);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.7);
+            transform: translateY(-1px);
         }
 
-        /* ターミナル＆コントロールボックス（コンパクトかつ高機能） */
+        /* ターミナル＆コントロールボックス */
         .terminal-box {
             width: 100%;
-            max-width: 400px;
-            background: rgba(5, 8, 20, 0.9);
-            border: 1px solid rgba(168, 85, 247, 0.45);
-            border-radius: 16px;
-            padding: 12px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.85);
+            max-width: 420px;
+            background: rgba(3, 7, 18, 0.88);
+            border: 1px solid rgba(168, 85, 247, 0.5);
+            border-radius: 18px;
+            padding: 14px;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(168, 85, 247, 0.12);
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         input[type="text"] {
             width: 100%;
             background: rgba(10, 15, 30, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
-            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 12px;
+            padding: 11px 14px;
             color: #fff;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             outline: none;
             transition: all 0.3s;
         }
 
         input[type="text"]:focus {
             border-color: #c084fc;
-            box-shadow: 0 0 15px rgba(192, 132, 252, 0.5);
+            box-shadow: 0 0 20px rgba(192, 132, 252, 0.6);
         }
 
         .action-btn {
             width: 100%;
             background: linear-gradient(135deg, #a855f7, #3b82f6);
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             color: white;
-            padding: 10px 16px;
+            padding: 11px 16px;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(168, 85, 247, 0.45);
+            box-shadow: 0 4px 18px rgba(168, 85, 247, 0.5);
         }
 
         .action-btn:hover, .action-btn:active {
             opacity: 0.95;
             transform: translateY(-1px);
+            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.8);
         }
 
         /* ライブログ */
         .guild-logs {
-            margin-top: 8px;
+            margin-top: 10px;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 0.7rem;
+            font-size: 0.72rem;
             color: #94a3b8;
-            background: rgba(2, 4, 15, 0.9);
+            background: rgba(2, 4, 15, 0.95);
             border-left: 3px solid #c084fc;
-            padding: 8px 10px;
+            padding: 8px 12px;
             border-radius: 0 6px 6px 0;
-            min-height: 38px;
-            max-height: 65px;
+            min-height: 42px;
+            max-height: 70px;
             overflow-y: auto;
             line-height: 1.4;
         }
 
         .manifest-link {
-            margin-top: 6px;
+            margin-top: 8px;
             display: none;
             text-align: center;
         }
@@ -231,14 +242,20 @@
         .manifest-link a {
             color: #38bdf8;
             text-decoration: none;
-            font-size: 0.78rem;
+            font-size: 0.8rem;
             font-weight: 600;
             border-bottom: 1px dashed #38bdf8;
+            transition: color 0.2s;
+        }
+
+        .manifest-link a:hover {
+            color: #7dd3fc;
         }
     </style>
 </head>
 <body>
 
+    <canvas id="matrixCanvas"></canvas>
     <div class="ambient-glow"></div>
 
     <div class="os-container">
@@ -250,7 +267,7 @@
         <div class="core-container">
             <div class="core-ring-2"></div>
             <div class="core-ring-1"></div>
-            <div class="core-orb" id="coreOrb"></div>
+            <div class="core-orb" id="coreOrb" onclick="triggerResonance()"></div>
         </div>
 
         <div class="presets-container">
@@ -275,15 +292,76 @@
     </div>
 
     <script>
+        // 背景パーティクル・マトリックスの制御
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        for (let i = 0; i < 45; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 1.5 + 0.5,
+                speedY: (Math.random() - 0.5) * 0.3,
+                speedX: (Math.random() - 0.5) * 0.3,
+                alpha: Math.random() * 0.7 + 0.2
+            });
+        }
+
+        function drawParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(216, 180, 254, ${p.alpha})`;
+                ctx.fill();
+                p.y += p.speedY;
+                p.x += p.speedX;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+            });
+            requestAnimationFrame(drawParticles);
+        }
+        drawParticles();
+
+        // 1/fゆらぎ生体コア（有機的鼓動エンジン）
+        const orb = document.getElementById('coreOrb');
+        let time = 0;
+
+        function organicPulse() {
+            time += 0.035;
+            // 1/fゆらぎを模した複合的なsine波による不規則な呼吸
+            const fluctuation = 1 + (Math.sin(time) * 0.05) + (Math.sin(time * 2.3) * 0.025) + (Math.cos(time * 0.5) * 0.03);
+            orb.style.transform = `scale(${fluctuation})`;
+            requestAnimationFrame(organicPulse);
+        }
+        organicPulse();
+
         function setIntent(text) {
             document.getElementById('intentInput').value = text;
+        }
+
+        function triggerResonance() {
+            const status = document.getElementById('systemStatus');
+            status.textContent = "Resonance Triggered: Core Overclocked";
+            setTimeout(() => {
+                status.textContent = "Hyper-Swarm Guilds: Online / Synced";
+            }, 1200);
         }
 
         function activateMatrix() {
             const input = document.getElementById('intentInput');
             const status = document.getElementById('systemStatus');
             const log = document.getElementById('logOutput');
-            const orb = document.getElementById('coreOrb');
             const linkContainer = document.getElementById('manifestLinkContainer');
             const link = document.getElementById('manifestUrl');
 
@@ -297,7 +375,7 @@
 
             setTimeout(() => {
                 log.innerHTML += `<br>> [Economist] 価値循環・エネルギー分散処理中...`;
-            }, 700);
+            }, 650);
 
             setTimeout(() => {
                 log.innerHTML += `<br>> [Dispatch] 自動デプロイ成功。現実化完了。`;
@@ -308,8 +386,9 @@
                 linkContainer.style.display = 'block';
                 
                 input.value = '';
-            }, 1800);
+            }, 1600);
         }
     </script>
 </body>
 </html>
+
