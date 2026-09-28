@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aetheria OS - Global Zenith Matrix</title>
+    <title>Aetheria OS - Intent-to-Reality Matrix</title>
     <style>
         * {
             margin: 0;
@@ -21,7 +21,6 @@
             position: relative;
         }
 
-        /* リアルタイム背景パーティクルキャンバス */
         #matrixCanvas {
             position: absolute;
             top: 0;
@@ -32,7 +31,6 @@
             z-index: 1;
         }
 
-        /* 呼吸する宇宙のオーラ（1/fゆらぎ） */
         .ambient-glow {
             position: absolute;
             top: 50%;
@@ -40,19 +38,18 @@
             transform: translate(-50%, -50%);
             width: 100vw;
             height: 100vh;
-            background: radial-gradient(circle at 50% 40%, rgba(168, 85, 247, 0.3) 0%, rgba(59, 130, 246, 0.12) 55%, transparent 80%);
+            background: radial-gradient(circle at 50% 40%, rgba(168, 85, 247, 0.25) 0%, rgba(59, 130, 246, 0.1) 55%, transparent 80%);
             pointer-events: none;
-            animation: cosmicBreathe 12s ease-in-out infinite;
+            animation: cosmicBreathe 14s ease-in-out infinite;
             z-index: 2;
         }
 
         @keyframes cosmicBreathe {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
-            40% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.85; }
-            70% { transform: translate(-50%, -50%) scale(0.94); opacity: 0.5; }
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
+            40% { transform: translate(-50%, -50%) scale(1.12); opacity: 0.8; }
+            70% { transform: translate(-50%, -50%) scale(0.92); opacity: 0.4; }
         }
 
-        /* 全体レイアウトコンテナ */
         .os-container {
             position: relative;
             z-index: 5;
@@ -63,38 +60,36 @@
             justify-content: center;
             align-items: center;
             padding: 16px;
-            gap: 18px;
+            gap: 16px;
         }
 
-        /* ヘッダー情報 */
         .header-container {
             text-align: center;
         }
 
         h1 {
-            font-size: 1.45rem;
-            letter-spacing: 0.3em;
+            font-size: 1.3rem;
+            letter-spacing: 0.35em;
             font-weight: 300;
-            background: linear-gradient(135deg, #f5d0fe, #60a5fa, #e879f9);
+            background: linear-gradient(135deg, #f5d0fe, #60a5fa, #c084fc);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px rgba(168, 85, 247, 0.6);
+            text-shadow: 0 0 35px rgba(168, 85, 247, 0.5);
         }
 
         .system-status {
-            font-size: 0.62rem;
+            font-size: 0.58rem;
             color: #93c5fd;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.25em;
             margin-top: 4px;
             text-transform: uppercase;
-            opacity: 0.85;
+            opacity: 0.8;
         }
 
-        /* 1/fゆらぎ・生体コアコンテナ */
         .core-container {
             position: relative;
-            width: 180px;
-            height: 180px;
+            width: 150px;
+            height: 150px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -102,40 +97,38 @@
 
         .core-orb {
             position: absolute;
-            width: 125px;
-            height: 125px;
-            background: radial-gradient(circle, #f3e8ff 0%, #3b82f6 55%, #020617 100%);
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #fae8ff 0%, #3b82f6 60%, #020617 100%);
             border-radius: 50%;
-            box-shadow: 0 0 60px rgba(168, 85, 247, 0.7), inset 0 0 30px rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 45px rgba(168, 85, 247, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.8);
             cursor: pointer;
-            transition: transform 0.1s ease;
         }
 
         .core-ring-1 {
             position: absolute;
-            width: 155px;
-            height: 155px;
-            border: 1px dashed rgba(216, 180, 254, 0.6);
+            width: 125px;
+            height: 125px;
+            border: 1px dashed rgba(216, 180, 254, 0.5);
             border-radius: 50%;
-            animation: rotateClockwise 25s linear infinite;
+            animation: rotateClockwise 30s linear infinite;
         }
 
         .core-ring-2 {
             position: absolute;
-            width: 180px;
-            height: 180px;
-            border: 1px solid rgba(96, 165, 250, 0.35);
+            width: 150px;
+            height: 150px;
+            border: 1px solid rgba(96, 165, 250, 0.3);
             border-radius: 50%;
-            animation: rotateCounter 35s linear infinite;
+            animation: rotateCounter 40s linear infinite;
         }
 
         @keyframes rotateClockwise { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes rotateCounter { 0% { transform: rotate(0deg); } 100% { transform: rotate(-360deg); } }
 
-        /* ワンタップ・インテント（超洗練チップ） */
         .presets-container {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
             justify-content: center;
             width: 100%;
@@ -143,113 +136,155 @@
         }
 
         .preset-chip {
-            background: rgba(15, 23, 42, 0.75);
-            border: 1px solid rgba(168, 85, 247, 0.4);
-            border-radius: 16px;
-            padding: 6px 12px;
-            font-size: 0.72rem;
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            border-radius: 12px;
+            padding: 5px 10px;
+            font-size: 0.65rem;
             color: #cbd5e1;
             cursor: pointer;
             transition: all 0.25s ease;
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(10px);
         }
 
-        .preset-chip:hover, .preset-chip:active {
-            background: rgba(168, 85, 247, 0.4);
+        .preset-chip:hover {
+            background: rgba(168, 85, 247, 0.35);
             border-color: #e879f9;
             color: #fff;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.7);
-            transform: translateY(-1px);
         }
 
-        /* ターミナル＆コントロールボックス */
         .terminal-box {
             width: 100%;
             max-width: 420px;
-            background: rgba(3, 7, 18, 0.88);
-            border: 1px solid rgba(168, 85, 247, 0.5);
-            border-radius: 18px;
-            padding: 14px;
-            backdrop-filter: blur(25px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9), inset 0 0 20px rgba(168, 85, 247, 0.12);
+            background: rgba(3, 7, 18, 0.85);
+            border: 1px solid rgba(168, 85, 247, 0.45);
+            border-radius: 16px;
+            padding: 12px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
         }
 
         .input-group {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         input[type="text"] {
             width: 100%;
-            background: rgba(10, 15, 30, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            border-radius: 12px;
-            padding: 11px 14px;
+            background: rgba(10, 15, 30, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 10px 14px;
             color: #fff;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             outline: none;
-            transition: all 0.3s;
         }
 
         input[type="text"]:focus {
             border-color: #c084fc;
-            box-shadow: 0 0 20px rgba(192, 132, 252, 0.6);
+            box-shadow: 0 0 12px rgba(192, 132, 252, 0.4);
         }
 
         .action-btn {
             width: 100%;
             background: linear-gradient(135deg, #a855f7, #3b82f6);
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             color: white;
-            padding: 11px 16px;
+            padding: 10px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.88rem;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 18px rgba(168, 85, 247, 0.5);
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
         }
 
-        .action-btn:hover, .action-btn:active {
-            opacity: 0.95;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 25px rgba(59, 130, 246, 0.8);
-        }
-
-        /* ライブログ */
         .guild-logs {
-            margin-top: 10px;
+            margin-top: 8px;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 0.72rem;
+            font-size: 0.65rem;
             color: #94a3b8;
-            background: rgba(2, 4, 15, 0.95);
+            background: rgba(2, 4, 15, 0.9);
             border-left: 3px solid #c084fc;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 0 6px 6px 0;
-            min-height: 42px;
-            max-height: 70px;
+            min-height: 34px;
+            max-height: 55px;
             overflow-y: auto;
-            line-height: 1.4;
         }
 
-        .manifest-link {
-            margin-top: 8px;
+        /* 意志直結マニフェスト・ダッシュボード（初期非表示） */
+        #appDashboard {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            background: rgba(1, 3, 12, 0.97);
+            backdrop-filter: blur(30px);
             display: none;
+            flex-direction: column;
+            padding: 20px;
+            justify-content: space-between;
+        }
+
+        .dash-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.3);
+            padding-bottom: 12px;
+        }
+
+        .dash-title {
+            font-size: 0.95rem;
+            color: #e879f9;
+            font-weight: 500;
+        }
+
+        .dash-close {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.75rem;
+        }
+
+        .dash-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: auto 0;
+        }
+
+        .metric-card {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 12px;
+            padding: 14px;
             text-align: center;
         }
 
-        .manifest-link a {
+        .metric-value {
+            font-size: 1.4rem;
             color: #38bdf8;
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border-bottom: 1px dashed #38bdf8;
-            transition: color 0.2s;
+            font-weight: 700;
+            margin-top: 4px;
         }
 
-        .manifest-link a:hover {
-            color: #7dd3fc;
+        .dash-btn {
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            padding: 12px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
         }
     </style>
 </head>
@@ -258,41 +293,58 @@
     <canvas id="matrixCanvas"></canvas>
     <div class="ambient-glow"></div>
 
-    <div class="os-container">
+    <div class="os-container" id="mainOS">
         <div class="header-container">
             <h1>AETHERIA OS</h1>
-            <p class="system-status" id="systemStatus">Hyper-Swarm Guilds: Online / Synced</p>
+            <p class="system-status" id="systemStatus">Intent-to-Reality Matrix: Active</p>
         </div>
 
         <div class="core-container">
             <div class="core-ring-2"></div>
             <div class="core-ring-1"></div>
-            <div class="core-orb" id="coreOrb" onclick="triggerResonance()"></div>
+            <div class="core-orb" id="coreOrb"></div>
         </div>
 
         <div class="presets-container">
-            <div class="preset-chip" onclick="setIntent('次世代分散型経済圏の構築')">💎 経済圏構築</div>
-            <div class="preset-chip" onclick="setIntent('AIエージェントスウォーム工場の全自動拡張')">🤖 工場拡張</div>
-            <div class="preset-chip" onclick="setIntent('Xを超える完全自律型文明プラットフォームの具現化')">⚡ 文明OS拡張</div>
-            <div class="preset-chip" onclick="setIntent('地球規模の生態系共鳴ネットワーク接続')">🌍 生態系接続</div>
+            <div class="preset-chip" onclick="setIntent('地球上の遊休計算資源の完全統合と文明マニフェスト')">🌐 文明リソース統合</div>
+            <div class="preset-chip" onclick="setIntent('全人類の意識共鳴による自律分散型インフラ構築')">✨ 意識共鳴インフラ</div>
+            <div class="preset-chip" onclick="setIntent('AIスウォームによる次世代自動価値生成ネットワーク')">🤖 AIスウォーム駆動</div>
+            <div class="preset-chip" onclick="setIntent('物質・情報・エネルギーの完全同期調和')">🌍 宇宙同期調和</div>
         </div>
 
         <div class="terminal-box">
             <div class="input-group">
-                <input type="text" id="intentInput" placeholder="あなたの意志や願いを投下...">
-                <button class="action-btn" onclick="activateMatrix()">発現</button>
+                <input type="text" id="intentInput" placeholder="あなたの純粋な意志を投下...">
+                <button class="action-btn" onclick="activateMatrix()">意志発現（マニフェスト）</button>
             </div>
             <div class="guild-logs" id="logOutput">
-                [System] 接続完了。Parser / Architect / Economist ギルド待機中。
-            </div>
-            <div class="manifest-link" id="manifestLinkContainer">
-                <a href="#" id="manifestUrl" target="_blank">✨ 生成された現実ポータル空間へアクセス [Dispatch]</a>
+                [System] 決済プロトコル完全撤廃。意志直結エンジン待機中。
             </div>
         </div>
     </div>
 
+    <!-- 意志直結マニフェスト・ダッシュボード -->
+    <div id="appDashboard">
+        <div class="dash-header">
+            <div class="dash-title" id="dashAppName">✨ マニフェスト・空間</div>
+            <button class="dash-close" onclick="closeDashboard()">✕ 閉じる</button>
+        </div>
+        
+        <div class="dash-content">
+            <div class="metric-card">
+                <div style="font-size: 0.75rem; color: #94a3b8;">グローバル文明リソース同期レート</div>
+                <div class="metric-value" id="metricVal">99.98% SYNCHRONIZED</div>
+            </div>
+            <div style="font-size: 0.8rem; color: #cbd5e1; line-height: 1.5; background: rgba(0,0,0,0.4); padding: 10px; border-radius: 8px;">
+                > 投下された意志: <span id="userIntentEcho" style="color: #e879f9;"></span><br>
+                > 状態: 決済・仲介を介さず、AIギルドスウォームにより直接現実空間へ具現化中。
+            </div>
+        </div>
+
+        <button class="dash-btn" onclick="boostApp()">⚡ 意志共鳴フィールドを限界突破する</button>
+    </div>
+
     <script>
-        // 背景パーティクル・マトリックスの制御
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -309,8 +361,8 @@
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
                 radius: Math.random() * 1.5 + 0.5,
-                speedY: (Math.random() - 0.5) * 0.3,
-                speedX: (Math.random() - 0.5) * 0.3,
+                speedY: (Math.random() - 0.5) * 0.25,
+                speedX: (Math.random() - 0.5) * 0.25,
                 alpha: Math.random() * 0.7 + 0.2
             });
         }
@@ -333,14 +385,11 @@
         }
         drawParticles();
 
-        // 1/fゆらぎ生体コア（有機的鼓動エンジン）
         const orb = document.getElementById('coreOrb');
         let time = 0;
-
         function organicPulse() {
             time += 0.035;
-            // 1/fゆらぎを模した複合的なsine波による不規則な呼吸
-            const fluctuation = 1 + (Math.sin(time) * 0.05) + (Math.sin(time * 2.3) * 0.025) + (Math.cos(time * 0.5) * 0.03);
+            const fluctuation = 1 + (Math.sin(time) * 0.05) + (Math.sin(time * 2.3) * 0.025);
             orb.style.transform = `scale(${fluctuation})`;
             requestAnimationFrame(organicPulse);
         }
@@ -350,45 +399,41 @@
             document.getElementById('intentInput').value = text;
         }
 
-        function triggerResonance() {
-            const status = document.getElementById('systemStatus');
-            status.textContent = "Resonance Triggered: Core Overclocked";
-            setTimeout(() => {
-                status.textContent = "Hyper-Swarm Guilds: Online / Synced";
-            }, 1200);
-        }
-
         function activateMatrix() {
             const input = document.getElementById('intentInput');
             const status = document.getElementById('systemStatus');
             const log = document.getElementById('logOutput');
-            const linkContainer = document.getElementById('manifestLinkContainer');
-            const link = document.getElementById('manifestUrl');
-
             const val = input.value.trim();
             if (!val) return;
 
-            status.textContent = "Processing: Multi-Guild Swarm Active...";
-            linkContainer.style.display = 'none';
-
-            log.innerHTML = `> [Parser] 意志受信: "${val}"<br>> [Architect] Rustコアシステム解析中...`;
+            status.textContent = "Processing: Intent Manifestation Active...";
+            log.innerHTML = `> [Parser] 純粋意志受信: "${val}"<br>> [Architect] 決済不要・文明リソース直結設計中...`;
 
             setTimeout(() => {
-                log.innerHTML += `<br>> [Economist] 価値循環・エネルギー分散処理中...`;
-            }, 650);
+                log.innerHTML += `<br>> [Swarm] AIギルドによる自律構築ネットワーク起動。`;
+            }, 750);
 
             setTimeout(() => {
-                log.innerHTML += `<br>> [Dispatch] 自動デプロイ成功。現実化完了。`;
-                status.textContent = "Hyper-Swarm Guilds: Manifestation Complete";
+                log.innerHTML += `<br>> [Manifest] 現実空間への具現化完了。`;
+                status.textContent = "Reality Synchronized";
                 
-                link.href = "#";
-                link.textContent = `✨ 新規生成ポータル: aetheria.matrix/${Math.random().toString(36).substring(2, 8)}`;
-                linkContainer.style.display = 'block';
-                
+                document.getElementById('dashAppName').textContent = `✨ 具現化領域: ${val.substring(0, 12)}...`;
+                document.getElementById('userIntentEcho').textContent = val;
+                document.getElementById('appDashboard').style.display = 'flex';
                 input.value = '';
-            }, 1600);
+            }, 1700);
+        }
+
+        function closeDashboard() {
+            document.getElementById('appDashboard').style.display = 'none';
+            document.getElementById('systemStatus').textContent = "Intent-to-Reality Matrix: Active";
+        }
+
+        function boostApp() {
+            const valElem = document.getElementById('metricVal');
+            valElem.textContent = "∞ INFINITE RESONANCE";
+            valElem.style.color = "#10b981";
         }
     </script>
 </body>
 </html>
-
