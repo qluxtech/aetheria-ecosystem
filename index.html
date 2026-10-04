@@ -11,7 +11,6 @@
             --panel-bg: rgba(15, 23, 42, 0.65);
             --border-color: rgba(255, 255, 255, 0.08);
             --accent-cyan: #38bdf8;
-            --accent-glow: rgba(56, 189, 248, 0.25);
             --text-main: #f8fafc;
             --text-sub: #94a3b8;
         }
@@ -63,7 +62,7 @@
             border: 1px solid rgba(255, 255, 255, 0.12); color: var(--text-main);
             border-radius: 100px; padding: 5px 14px;
             font-size: 0.65rem; font-weight: 500; cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.25s ease;
         }
         .wallet-btn:hover { background: rgba(255, 255, 255, 0.12); border-color: rgba(255, 255, 255, 0.3); }
 
@@ -74,14 +73,14 @@
         }
         .address-box { color: var(--accent-cyan); font-size: 0.58rem; letter-spacing: -0.01em; opacity: 0.9; }
 
-        /* 中央：1/fゆらぎ呼吸コア Canvas */
+        /* 中央：パーティクル・ホログラフィックコア Canvas */
         .core-container {
             position: relative; display: flex; justify-content: center; align-items: center;
             flex: 1; width: 100%;
         }
 
         #coreCanvas {
-            width: 220px; height: 220px;
+            width: 280px; height: 280px;
             cursor: pointer;
         }
 
@@ -171,7 +170,7 @@
                 <button class="action-btn" onclick="processZeroSettlement()">Run</button>
             </div>
             <div class="logs" id="logBox">
-                > System initialized. Core breathing in 1/f fluctuation.
+                > System initialized. Quantum swarm core breathing.
             </div>
         </div>
     </div>
@@ -179,7 +178,7 @@
     <script>
         const TARGET_BSV_ADDRESS = "1Mb66iHohUEg8eAnkgV9uTTV7R235tuy95";
 
-        // 背景ネットワーク描画
+        // 背景グリッド描画
         const bgCanvas = document.getElementById('bgCanvas');
         const bgCtx = bgCanvas.getContext('2d');
         let width, height;
@@ -191,103 +190,109 @@
         window.addEventListener('resize', resize);
         resize();
 
-        const nodes = Array.from({ length: 30 }, () => ({
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-            vx: (Math.random() - 0.5) * 0.3,
-            vy: (Math.random() - 0.5) * 0.3
-        }));
-
         function renderBg() {
-            bgCtx.fillStyle = 'rgba(3, 7, 18, 0.35)';
+            bgCtx.fillStyle = '#030712';
             bgCtx.fillRect(0, 0, width, height);
-
-            nodes.forEach((n1, i) => {
-                n1.x += n1.vx; n1.y += n1.vy;
-                if (n1.x < 0 || n1.x > width) n1.vx *= -1;
-                if (n1.y < 0 || n1.y > height) n1.vy *= -1;
-
-                for (let j = i + 1; j < nodes.length; j++) {
-                    const n2 = nodes[j];
-                    const dx = n2.x - n1.x, dy = n2.y - n1.y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 120) {
-                        bgCtx.beginPath();
-                        bgCtx.moveTo(n1.x, n1.y); bgCtx.lineTo(n2.x, n2.y);
-                        bgCtx.strokeStyle = `rgba(56, 189, 248, ${(1 - dist / 120) * 0.15})`;
-                        bgCtx.lineWidth = 0.6; bgCtx.stroke();
-                    }
-                }
-            });
             requestAnimationFrame(renderBg);
         }
         renderBg();
 
-        // 1/f ゆらぎ (Pink Noise) 生成クラス
-        class OneOverFFluctuation {
+        // 1/f ゆらぎアルゴリズム
+        class PinkNoise {
             constructor() {
-                this.b0 = 0; this.b1 = 0; this.b2 = 0; this.b3 = 0; this.b4 = 0; this.b5 = 0; this.b6 = 0;
+                this.b = [0,0,0,0,0,0,0];
             }
             next() {
                 const white = Math.random() * 2 - 1;
-                this.b0 = 0.99886 * this.b0 + white * 0.0555179;
-                this.b1 = 0.99332 * this.b1 + white * 0.0750759;
-                this.b2 = 0.96900 * this.b2 + white * 0.1538520;
-                this.b3 = 0.86650 * this.b3 + white * 0.3104856;
-                this.b4 = 0.55000 * this.b4 + white * 0.5329522;
-                this.b5 = -0.7616 * this.b5 - white * 0.0168980;
-                const pink = this.b0 + this.b1 + this.b2 + this.b3 + this.b4 + this.b5 + this.b6 + white * 0.5362;
-                this.b6 = white * 0.115926;
-                return (pink / 5) + 0.5; // 0.0 〜 1.0 に正規化
+                this.b[0] = 0.99886 * this.b[0] + white * 0.0555179;
+                this.b[1] = 0.99332 * this.b[1] + white * 0.0750759;
+                this.b[2] = 0.96900 * this.b[2] + white * 0.1538520;
+                this.b[3] = 0.86650 * this.b[3] + white * 0.3104856;
+                this.b[4] = 0.55000 * this.b[4] + white * 0.5329522;
+                this.b[5] = -0.7616 * this.b[5] - white * 0.0168980;
+                const pink = this.b[0] + this.b[1] + this.b[2] + this.b[3] + this.b[4] + this.b[5] + this.b[6] + white * 0.5362;
+                this.b[6] = white * 0.115926;
+                return (pink / 5) + 0.5;
             }
         }
 
-        // コアレンダリング（1/f呼吸アニメーション）
+        // ホログラフィック・パーティクルコアの構築
         const coreCanvas = document.getElementById('coreCanvas');
         const coreCtx = coreCanvas.getContext('2d');
-        coreCanvas.width = 220; coreCanvas.height = 220;
+        coreCanvas.width = 280; coreCanvas.height = 280;
 
-        const pinkNoise = new OneOverFFluctuation();
-        let baseRadius = 45;
-        let currentScale = 1;
-        let smoothFluctuation = 0.5;
+        const pinkNoise = new PinkNoise();
+        const particleCount = 600;
+        const particles = [];
 
-        function renderCore() {
-            coreCtx.clearRect(0, 0, 220, 220);
-            
-            // 1/fゆらぎ値を取得し滑らかに補間
-            const targetNoise = pinkNoise.next();
-            smoothFluctuation += (targetNoise - smoothFluctuation) * 0.05;
-
-            const radius = baseRadius * currentScale + (smoothFluctuation * 8 - 4);
-            const cx = 110, cy = 110;
-
-            // 外側の柔らかな光彩（グロー）
-            const glowGrad = coreCtx.createRadialGradient(cx, cy, radius * 0.2, cx, cy, radius * 2.2);
-            glowGrad.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
-            glowGrad.addColorStop(0.5, 'rgba(56, 189, 248, 0.08)');
-            glowGrad.addColorStop(1, 'rgba(3, 7, 18, 0)');
-
-            coreCtx.fillStyle = glowGrad;
-            coreCtx.beginPath();
-            coreCtx.arc(cx, cy, radius * 2.2, 0, Math.PI * 2);
-            coreCtx.fill();
-
-            // 本体オーブグラデーション
-            const coreGrad = coreCtx.createRadialGradient(cx - radius*0.3, cy - radius*0.3, 0, cx, cy, radius);
-            coreGrad.addColorStop(0, '#ffffff');
-            coreGrad.addColorStop(0.35, '#38bdf8');
-            coreGrad.addColorStop(0.85, '#0284c7');
-            coreGrad.addColorStop(1, '#030712');
-
-            coreCtx.fillStyle = coreGrad;
-            coreCtx.beginPath();
-            coreCtx.arc(cx, cy, radius, 0, Math.PI * 2);
-            coreCtx.fill();
-
-            requestAnimationFrame(renderCore);
+        for (let i = 0; i < particleCount; i++) {
+            const theta = Math.random() * Math.PI * 2;
+            const phi = Math.acos((Math.random() * 2) - 1);
+            const radius = 65 + Math.random() * 15;
+            particles.push({
+                x: radius * Math.sin(phi) * Math.cos(theta),
+                y: radius * Math.sin(phi) * Math.sin(theta),
+                z: radius * Math.cos(phi),
+                baseRadius: radius,
+                size: Math.random() * 1.8 + 0.6,
+                alpha: Math.random() * 0.8 + 0.2,
+                color: Math.random() > 0.3 ? '#38bdf8' : '#818cf8'
+            });
         }
-        renderCore();
+
+        let angleY = 0;
+        let angleX = 0;
+        let smoothFluctuation = 0.5;
+        let boostRadius = 1.0;
+
+        function renderParticleCore() {
+            coreCtx.clearRect(0, 0, 280, 280);
+            
+            const targetNoise = pinkNoise.next();
+            smoothFluctuation += (targetNoise - smoothFluctuation) * 0.04;
+            const currentScale = boostRadius * (0.88 + smoothFluctuation * 0.24);
+
+            const cx = 140, cy = 140;
+            angleY += 0.008;
+            angleX += 0.004;
+
+            // 中心エネルギー光
+            const centerGlow = coreCtx.createRadialGradient(cx, cy, 0, cx, cy, 70 * currentScale);
+            centerGlow.addColorStop(0, 'rgba(56, 189, 248, 0.45)');
+            centerGlow.addColorStop(0.4, 'rgba(129, 140, 248, 0.15)');
+            centerGlow.addColorStop(1, 'rgba(3, 7, 18, 0)');
+            coreCtx.fillStyle = centerGlow;
+            coreCtx.beginPath();
+            coreCtx.arc(cx, cy, 70 * currentScale, 0, Math.PI * 2);
+            coreCtx.fill();
+
+            // 3Dパーティクル回転描画
+            particles.sort((a, b) => a.z - b.z); // 深度ソート
+
+            particles.forEach(p => {
+                // Y軸・X軸回転
+                let x1 = p.x * Math.cos(angleY) - p.z * Math.sin(angleY);
+                let z1 = p.z * Math.cos(angleY) + p.x * Math.sin(angleY);
+
+                let y2 = p.y * Math.cos(angleX) - z1 * Math.sin(angleX);
+                let z2 = z1 * Math.cos(angleX) + p.y * Math.sin(angleX);
+
+                const scale = (z2 + 150) / 300 * currentScale;
+                const renderX = cx + x1 * scale;
+                const renderY = cy + y2 * scale;
+                const opacity = Math.max(0.1, (z2 + 100) / 200 * p.alpha);
+
+                coreCtx.fillStyle = p.color;
+                coreCtx.globalAlpha = opacity;
+                coreCtx.beginPath();
+                coreCtx.arc(renderX, renderY, p.size * scale, 0, Math.PI * 2);
+                coreCtx.fill();
+            });
+
+            coreCtx.globalAlpha = 1.0;
+            requestAnimationFrame(renderParticleCore);
+        }
+        renderParticleCore();
 
         async function connectBSVWallet() {
             const log = document.getElementById('logBox');
@@ -302,8 +307,8 @@
             const body = document.getElementById('appBody');
             const val = input.value.trim() || "Autonomous Protocol Run";
 
-            currentScale = 1.25;
-            setTimeout(() => { currentScale = 1; }, 400);
+            boostRadius = 1.35;
+            setTimeout(() => { boostRadius = 1.0; }, 500);
 
             log.innerHTML = `> Executing: "${val}"<br>> Routing to ${TARGET_BSV_ADDRESS.slice(0,8)}...`;
 
