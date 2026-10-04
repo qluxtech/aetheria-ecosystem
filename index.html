@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aetheria OS - Zero-Settlement Core Engine</title>
-    <!-- BSV SDK Library -->
+    <title>Aetheria OS - Civilization Operating Substrate</title>
     <script src="https://unpkg.com/bsv@2.0.10/bsv.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -15,10 +14,7 @@
             overflow: hidden;
         }
 
-        #bgCanvas {
-            position: absolute; top: 0; left: 0;
-            width: 100%; height: 100%; z-index: 1;
-        }
+        #bgCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 
         .os-container {
             position: relative; z-index: 10;
@@ -37,10 +33,7 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
 
-        .header-top {
-            display: flex; justify-content: space-between; align-items: center;
-            margin-bottom: 6px;
-        }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 
         h1 {
             font-size: 1rem; font-weight: 300; letter-spacing: 0.2em;
@@ -53,21 +46,13 @@
             border: 1px solid #10b981; color: #a7f3d0;
             border-radius: 8px; padding: 4px 10px;
             font-size: 0.65rem; font-weight: 600; cursor: pointer;
-            transition: all 0.3s ease;
         }
-        .wallet-btn:hover { background: #10b981; color: #000; }
 
-        .metrics-grid {
-            display: grid; grid-template-columns: 1fr; gap: 2px;
-            font-size: 0.58rem; color: #94a3b8; font-family: monospace;
-        }
+        .metrics-grid { display: grid; grid-template-columns: 1fr; gap: 2px; font-size: 0.58rem; color: #94a3b8; font-family: monospace; }
         .highlight { color: #10b981; font-weight: bold; }
         .address-box { color: #38bdf8; word-break: break-all; font-size: 0.55rem; }
 
-        .core-container {
-            position: relative;
-            display: flex; justify-content: center; align-items: center;
-        }
+        .core-container { position: relative; display: flex; justify-content: center; align-items: center; }
 
         .core-orb {
             width: 85px; height: 85px;
@@ -106,7 +91,7 @@
             flex: 1; background: rgba(10, 15, 30, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 10px; padding: 8px 10px;
-            color: #fff; font-size: 0.75rem; outline: none;
+            color: #fff; font-size: 0.72rem; outline: none;
         }
 
         .action-btn {
@@ -134,7 +119,7 @@
         <div class="status-card">
             <div class="header-top">
                 <h1>AETHERIA OS</h1>
-                <button class="wallet-btn" id="walletBtn" onclick="connectBSVWallet()">ウォレット同期</button>
+                <button class="wallet-btn" id="walletBtn" onclick="connectBSVWallet()">文明レジャー同期</button>
             </div>
             <div class="metrics-grid">
                 <div>Settlement Engine: <span class="highlight">ZERO-SETTLE (BSV)</span></div>
@@ -148,24 +133,24 @@
         </div>
 
         <div class="generated-app-card" id="appCard">
-            <div class="app-title" id="appTitle">⚡ ZERO-SETTLEMENT ENGINE ACTIVE</div>
-            <div id="appBody">意志およびゼロ決済データを処理中...</div>
+            <div class="app-title" id="appTitle">⚡ CIVILIZATION OS DEPLOYED</div>
+            <div id="appBody">意志を解析中...</div>
         </div>
 
         <div class="terminal-card">
             <div class="input-box">
-                <input type="text" id="intentInput" placeholder="意志・コマンドを入力 (例: 儲かるアプリ作って)">
-                <button class="action-btn" onclick="processZeroSettlement()">全自動構築</button>
+                <!-- 入力例を最先端の文明OS仕様にアップデート -->
+                <input type="text" id="intentInput" placeholder="文明コマンド入力 (例: Xを超える自律分散SNSの起動)">
+                <button class="action-btn" onclick="processZeroSettlement()">文明発現</button>
             </div>
             <div class="logs" id="logBox">
-                > [Zero-Settle Engine] ターゲットアドレス設定完了。<br>
-                > Target: 1Mb66iHohUEg8eAnkgV9uTTV7R235tuy95
+                > [Aetheria OS] 新文明インフラストラクチャ準備完了。<br>
+                > Target Address: 1Mb66iHohUEg8eAnkgV9uTTV7R235tuy95
             </div>
         </div>
     </div>
 
     <script>
-        // ターゲットアドレスの固定設定
         const TARGET_BSV_ADDRESS = "1Mb66iHohUEg8eAnkgV9uTTV7R235tuy95";
 
         const canvas = document.getElementById('bgCanvas');
@@ -217,10 +202,9 @@
 
         async function connectBSVWallet() {
             const log = document.getElementById('logBox');
-            log.innerHTML = `> [Wallet Sync] Target: ${TARGET_BSV_ADDRESS}<br>> Yours / HandCash プロトコル同期完了。`;
+            log.innerHTML = `> [Civilization Ledger] Target: ${TARGET_BSV_ADDRESS}<br>> BSVオンチェーン・グローバル同期完了。`;
         }
 
-        // ゼロセトルメント全自動処理
         function processZeroSettlement() {
             const input = document.getElementById('intentInput');
             const log = document.getElementById('logBox');
@@ -228,12 +212,12 @@
             const card = document.getElementById('appCard');
             const title = document.getElementById('appTitle');
             const body = document.getElementById('appBody');
-            const val = input.value.trim() || "意志（Intent）自動決済ルーティング";
+            const val = input.value.trim() || "Xを超える自律型分散ナノ経済プロトコルの起動";
 
             orb.style.transform = "scale(1.25)";
             orb.style.boxShadow = "0 0 90px rgba(16, 185, 129, 1), inset 0 0 30px rgba(255,255,255,1)";
             
-            log.innerHTML = `> [Zero-Settle] 意志解析中: "${val}"<br>> [BSV Stream] アドレス ${TARGET_BSV_ADDRESS.slice(0,8)}... へデータ＆流動性直接集約中...`;
+            log.innerHTML = `> [Intent Ingest] 新文明意志解析: "${val}"<br>> [Zero-Settle Network] ターゲットアドレスへ直接展開中...`;
 
             setTimeout(() => {
                 orb.style.transform = "scale(1)";
@@ -241,16 +225,16 @@
                 
                 card.style.display = "block";
                 
-                title.textContent = `⚡ ZERO-SETTLEMENT COMPLETE`;
+                title.textContent = `🌌 CIVILIZATION SUBSTRATE ACTIVATED`;
                 body.innerHTML = `
-                    <b>【ゼロセトルメント集約ステータス】</b><br>
-                    • <b>Target Receiver</b>: <span style="font-size:0.55rem; color:#38bdf8;">${TARGET_BSV_ADDRESS}</span><br>
-                    • <b>Intent Payload</b>: "${val}"<br>
-                    • <b>Fee / Friction</b>: 0.000% (Zero-Settle Engine)<br>
-                    • <b>Settlement Status</b>: BSVオンチェーン全自動同期・集約完了
+                    <b>【次世代文明OS・展開パラメーター】</b><br>
+                    • <b>Architecture</b>: 中央集権SNS/アルゴリズム非依存型分散ネットワーク<br>
+                    • <b>Core Protocol</b>: BSV 1Sat/Byte データ流動性プロトコル<br>
+                    • <b>Target Address</b>: <span style="font-size:0.55rem; color:#38bdf8;">${TARGET_BSV_ADDRESS}</span><br>
+                    • <b>Status</b>: 旧時代のSNS構造を超越。グローバル分散レジャーへ永久展開完了。
                 `;
 
-                log.innerHTML += `<br>> [Complete] すべてのゼロセトルメント処理をターゲットアドレスへ集約完了。`;
+                log.innerHTML += `<br>> [Complete] 新文明基盤の展開とゼロセトルメント同期が完了しました。`;
                 input.value = "";
             }, 1000);
         }
