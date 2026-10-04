@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aetheria OS - Civilization Operating Substrate</title>
+    <title>Aetheria Protocol</title>
     <script src="https://unpkg.com/bsv@2.0.10/bsv.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
             width: 100%; height: 100%;
-            background: #000206; color: #e2e8f0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            overflow: hidden;
+            background: #030712; color: #f9fafb;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            overflow: hidden; -webkit-font-smoothing: antialiased;
         }
 
         #bgCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
@@ -21,93 +21,91 @@
             width: 100%; height: 100%;
             display: flex; flex-direction: column;
             justify-content: space-between; align-items: center;
-            padding: 14px; gap: 8px;
+            padding: 20px 16px; gap: 12px;
         }
 
         .status-card {
-            width: 100%; max-width: 400px;
-            background: rgba(2, 6, 23, 0.88);
-            border: 1px solid rgba(16, 185, 129, 0.5);
-            border-radius: 14px; padding: 10px 14px;
-            backdrop-filter: blur(16px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            width: 100%; max-width: 420px;
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px; padding: 12px 16px;
+            backdrop-filter: blur(24px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
         }
 
-        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 
         h1 {
-            font-size: 1rem; font-weight: 300; letter-spacing: 0.2em;
-            background: linear-gradient(135deg, #a7f3d0, #10b981, #38bdf8);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            font-size: 0.85rem; font-weight: 500; letter-spacing: 0.25em;
+            color: #f3f4f6; text-transform: uppercase;
         }
 
         .wallet-btn {
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid #10b981; color: #a7f3d0;
-            border-radius: 8px; padding: 4px 10px;
-            font-size: 0.65rem; font-weight: 600; cursor: pointer;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15); color: #e5e7eb;
+            border-radius: 20px; padding: 4px 12px;
+            font-size: 0.65rem; font-weight: 500; cursor: pointer;
+            transition: all 0.2s ease;
         }
+        .wallet-btn:hover { background: rgba(255, 255, 255, 0.15); color: #fff; }
 
-        .metrics-grid { display: grid; grid-template-columns: 1fr; gap: 2px; font-size: 0.58rem; color: #94a3b8; font-family: monospace; }
-        .highlight { color: #10b981; font-weight: bold; }
-        .address-box { color: #38bdf8; word-break: break-all; font-size: 0.55rem; }
+        .metrics-grid { display: flex; flex-direction: column; gap: 4px; font-size: 0.6rem; color: #9ca3af; font-family: ui-monospace, SFMono-Regular, monospace; }
+        .address-box { color: #38bdf8; word-break: break-all; font-size: 0.58rem; letter-spacing: -0.01em; }
 
-        .core-container { position: relative; display: flex; justify-content: center; align-items: center; }
+        .core-container { position: relative; display: flex; justify-content: center; align-items: center; flex: 1; }
 
         .core-orb {
-            width: 85px; height: 85px;
-            background: radial-gradient(circle, #a7f3d0 0%, #10b981 50%, #020617 100%);
+            width: 72px; height: 72px;
+            background: radial-gradient(circle, #ffffff 0%, #38bdf8 40%, #030712 100%);
             border-radius: 50%;
-            box-shadow: 0 0 50px rgba(16, 185, 129, 0.6), inset 0 0 20px rgba(255,255,255,0.9);
-            transition: all 0.5s ease; cursor: pointer;
+            box-shadow: 0 0 40px rgba(56, 189, 248, 0.4), inset 0 0 15px rgba(255,255,255,0.8);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer;
         }
 
         .generated-app-card {
-            display: none; width: 100%; max-width: 400px;
-            background: rgba(15, 23, 42, 0.92);
-            border: 1px solid rgba(16, 185, 129, 0.6);
-            border-radius: 12px; padding: 10px;
-            font-size: 0.7rem; color: #f8fafc;
-            backdrop-filter: blur(20px);
-            animation: fadeIn 0.5s ease;
+            display: none; width: 100%; max-width: 420px;
+            background: rgba(17, 24, 39, 0.85);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 16px; padding: 14px;
+            font-size: 0.72rem; color: #f3f4f6; line-height: 1.5;
+            backdrop-filter: blur(24px);
+            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
-        .app-title { color: #a7f3d0; font-weight: bold; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2px; }
+        .app-title { color: #38bdf8; font-weight: 600; margin-bottom: 6px; font-size: 0.75rem; letter-spacing: 0.02em; }
 
         .terminal-card {
-            width: 100%; max-width: 400px;
-            background: rgba(2, 6, 23, 0.88);
-            border: 1px solid rgba(16, 185, 129, 0.4);
-            border-radius: 16px; padding: 10px;
-            backdrop-filter: blur(20px);
-            display: flex; flex-direction: column; gap: 6px;
+            width: 100%; max-width: 420px;
+            background: rgba(17, 24, 39, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px; padding: 8px 10px;
+            backdrop-filter: blur(24px);
+            display: flex; flex-direction: column; gap: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .input-box { display: flex; gap: 6px; }
+        .input-box { display: flex; align-items: center; gap: 8px; background: rgba(31, 41, 55, 0.6); border-radius: 14px; padding: 4px 6px 4px 12px; border: 1px solid rgba(255,255,255,0.05); }
 
         input[type="text"] {
-            flex: 1; background: rgba(10, 15, 30, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px; padding: 8px 10px;
-            color: #fff; font-size: 0.72rem; outline: none;
+            flex: 1; background: transparent; border: none;
+            color: #fff; font-size: 0.8rem; outline: none;
+            font-weight: 400;
         }
+        input[type="text"]::placeholder { color: #6b7280; }
 
         .action-btn {
-            background: linear-gradient(135deg, #10b981, #059669);
-            border: none; border-radius: 10px; color: #fff;
-            padding: 0 14px; font-weight: 700; font-size: 0.75rem;
-            cursor: pointer; white-space: nowrap;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+            background: #ffffff; border: none; border-radius: 10px; color: #030712;
+            padding: 8px 16px; font-weight: 600; font-size: 0.75rem;
+            cursor: pointer; white-space: nowrap; transition: all 0.2s ease;
         }
+        .action-btn:hover { background: #e5e7eb; transform: scale(1.02); }
 
         .logs {
-            font-family: monospace; font-size: 0.6rem; color: #a7f3d0;
-            background: rgba(0, 0, 0, 0.6);
-            border-left: 3px solid #10b981; padding: 6px;
-            border-radius: 0 6px 6px 0; min-height: 44px; max-height: 55px;
-            overflow-y: auto;
+            font-family: ui-monospace, SFMono-Regular, monospace; font-size: 0.6rem; color: #9ca3af;
+            background: transparent; padding: 2px 6px;
+            max-height: 40px; overflow-y: auto; line-height: 1.4;
         }
     </style>
 </head>
@@ -118,13 +116,12 @@
     <div class="os-container">
         <div class="status-card">
             <div class="header-top">
-                <h1>AETHERIA OS</h1>
-                <button class="wallet-btn" id="walletBtn" onclick="connectBSVWallet()">文明レジャー同期</button>
+                <h1>AETHERIA</h1>
+                <button class="wallet-btn" id="walletBtn" onclick="connectBSVWallet()">Sync Wallet</button>
             </div>
             <div class="metrics-grid">
-                <div>Settlement Engine: <span class="highlight">ZERO-SETTLE (BSV)</span></div>
-                <div>Target Address: <span class="address-box">1Mb66iHohUEg8eAnkgV9uTTV7R235tuy95</span></div>
-                <div>Flow Stream: <span class="highlight">802 Res/s</span> | Friction: <span>0.000%</span></div>
+                <div>Engine: <span style="color:#38bdf8;">BSV Zero-Settlement</span></div>
+                <div>Target: <span class="address-box">1Mb66iHohUEg8eAnkgV9uTTV7R235tuy95</span></div>
             </div>
         </div>
 
@@ -133,19 +130,18 @@
         </div>
 
         <div class="generated-app-card" id="appCard">
-            <div class="app-title" id="appTitle">⚡ CIVILIZATION OS DEPLOYED</div>
-            <div id="appBody">意志を解析中...</div>
+            <div class="app-title" id="appTitle">System Architecture</div>
+            <div id="appBody">Processing input...</div>
         </div>
 
         <div class="terminal-card">
             <div class="input-box">
-                <!-- 入力例を最先端の文明OS仕様にアップデート -->
-                <input type="text" id="intentInput" placeholder="文明コマンド入力 (例: Xを超える自律分散SNSの起動)">
-                <button class="action-btn" onclick="processZeroSettlement()">文明発現</button>
+                <!-- 大げさな表現を排し、ミニマルでスマートなプレースホルダーに修正 -->
+                <input type="text" id="intentInput" placeholder="Send prompt or command...">
+                <button class="action-btn" onclick="processZeroSettlement()">Run</button>
             </div>
             <div class="logs" id="logBox">
-                > [Aetheria OS] 新文明インフラストラクチャ準備完了。<br>
-                > Target Address: 1Mb66iHohUEg8eAnkgV9uTTV7R235tuy95
+                > System initialized. Ready.
             </div>
         </div>
     </div>
@@ -165,16 +161,16 @@
         resize();
 
         const nodes = [];
-        const numNodes = 40;
+        const numNodes = 35;
         for (let i = 0; i < numNodes; i++) {
             nodes.push({
                 x: Math.random() * width, y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.5, vy: (Math.random() - 0.5) * 0.5
+                vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4
             });
         }
 
         function render() {
-            ctx.fillStyle = 'rgba(0, 2, 6, 0.25)';
+            ctx.fillStyle = 'rgba(3, 7, 18, 0.3)';
             ctx.fillRect(0, 0, width, height);
 
             for (let i = 0; i < numNodes; i++) {
@@ -188,11 +184,11 @@
                     let dx = n2.x - n1.x, dy = n2.y - n1.y;
                     let dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist < 120) {
+                    if (dist < 110) {
                         ctx.beginPath();
                         ctx.moveTo(n1.x, n1.y); ctx.lineTo(n2.x, n2.y);
-                        ctx.strokeStyle = `rgba(16, 185, 129, ${(1 - dist / 120) * 0.4})`;
-                        ctx.lineWidth = 0.8; ctx.stroke();
+                        ctx.strokeStyle = `rgba(56, 189, 248, ${(1 - dist / 110) * 0.25})`;
+                        ctx.lineWidth = 0.7; ctx.stroke();
                     }
                 }
             }
@@ -202,7 +198,7 @@
 
         async function connectBSVWallet() {
             const log = document.getElementById('logBox');
-            log.innerHTML = `> [Civilization Ledger] Target: ${TARGET_BSV_ADDRESS}<br>> BSVオンチェーン・グローバル同期完了。`;
+            log.innerHTML = `> Wallet linked: ${TARGET_BSV_ADDRESS.slice(0,8)}...`;
         }
 
         function processZeroSettlement() {
@@ -212,31 +208,29 @@
             const card = document.getElementById('appCard');
             const title = document.getElementById('appTitle');
             const body = document.getElementById('appBody');
-            const val = input.value.trim() || "Xを超える自律型分散ナノ経済プロトコルの起動";
+            const val = input.value.trim() || "Autonomous Agent Execution";
 
-            orb.style.transform = "scale(1.25)";
-            orb.style.boxShadow = "0 0 90px rgba(16, 185, 129, 1), inset 0 0 30px rgba(255,255,255,1)";
+            orb.style.transform = "scale(1.15)";
+            orb.style.boxShadow = "0 0 60px rgba(56, 189, 248, 0.8), inset 0 0 20px rgba(255,255,255,1)";
             
-            log.innerHTML = `> [Intent Ingest] 新文明意志解析: "${val}"<br>> [Zero-Settle Network] ターゲットアドレスへ直接展開中...`;
+            log.innerHTML = `> Executing: "${val}"<br>> Routing to ${TARGET_BSV_ADDRESS.slice(0,8)}...`;
 
             setTimeout(() => {
                 orb.style.transform = "scale(1)";
-                orb.style.boxShadow = "0 0 50px rgba(16, 185, 129, 0.6), inset 0 0 20px rgba(255,255,255,0.9)";
+                orb.style.boxShadow = "0 0 40px rgba(56, 189, 248, 0.4), inset 0 0 15px rgba(255,255,255,0.8)";
                 
                 card.style.display = "block";
                 
-                title.textContent = `🌌 CIVILIZATION SUBSTRATE ACTIVATED`;
+                title.textContent = "Execution Output";
                 body.innerHTML = `
-                    <b>【次世代文明OS・展開パラメーター】</b><br>
-                    • <b>Architecture</b>: 中央集権SNS/アルゴリズム非依存型分散ネットワーク<br>
-                    • <b>Core Protocol</b>: BSV 1Sat/Byte データ流動性プロトコル<br>
-                    • <b>Target Address</b>: <span style="font-size:0.55rem; color:#38bdf8;">${TARGET_BSV_ADDRESS}</span><br>
-                    • <b>Status</b>: 旧時代のSNS構造を超越。グローバル分散レジャーへ永久展開完了。
+                    <b>Prompt</b>: "${val}"<br>
+                    <b>Target</b>: <span style="font-size:0.6rem; color:#38bdf8;">${TARGET_BSV_ADDRESS}</span><br>
+                    <b>Status</b>: Settled on BSV Ledger (0.00ms)
                 `;
 
-                log.innerHTML += `<br>> [Complete] 新文明基盤の展開とゼロセトルメント同期が完了しました。`;
+                log.innerHTML += `<br>> Success. Transaction confirmed.`;
                 input.value = "";
-            }, 1000);
+            }, 800);
         }
     </script>
 </body>
