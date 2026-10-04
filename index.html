@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aetheria OS - Beyond Micro-Payments Core</title>
+    <title>Aetheria OS - Autonomous App Creator Core</title>
+    <!-- EVM (ethers.js) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body {
@@ -23,15 +25,14 @@
             width: 100%; height: 100%;
             display: flex; flex-direction: column;
             justify-content: space-between; align-items: center;
-            padding: 16px; gap: 10px;
+            padding: 14px; gap: 8px;
         }
 
-        /* 上部：決済超越ステータス */
         .status-card {
             width: 100%; max-width: 400px;
             background: rgba(2, 6, 23, 0.85);
             border: 1px solid rgba(168, 85, 247, 0.4);
-            border-radius: 14px; padding: 12px 16px;
+            border-radius: 14px; padding: 10px 14px;
             backdrop-filter: blur(16px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.8);
         }
@@ -40,28 +41,27 @@
             font-size: 1.1rem; font-weight: 300; letter-spacing: 0.3em;
             background: linear-gradient(135deg, #f5d0fe, #60a5fa, #c084fc);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            text-align: center; margin-bottom: 4px;
+            text-align: center; margin-bottom: 2px;
         }
 
         .subtitle {
-            font-size: 0.58rem; color: #38bdf8; text-align: center;
-            letter-spacing: 0.15em; font-family: monospace; margin-bottom: 8px;
+            font-size: 0.55rem; color: #38bdf8; text-align: center;
+            letter-spacing: 0.15em; font-family: monospace; margin-bottom: 6px;
         }
 
         .metrics-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 4px 10px;
-            font-size: 0.62rem; color: #94a3b8; font-family: monospace;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 2px 8px;
+            font-size: 0.6rem; color: #94a3b8; font-family: monospace;
         }
         .highlight { color: #10b981; font-weight: bold; }
 
-        /* 中央：エネルギー共鳴コア */
         .core-container {
             position: relative;
             display: flex; justify-content: center; align-items: center;
         }
 
         .core-orb {
-            width: 90px; height: 90px;
+            width: 80px; height: 80px;
             background: radial-gradient(circle, #f3e8ff 0%, #3b82f6 60%, #020617 100%);
             border-radius: 50%;
             box-shadow: 0 0 50px rgba(168, 85, 247, 0.8), inset 0 0 20px rgba(255,255,255,0.9);
@@ -69,14 +69,29 @@
             cursor: pointer;
         }
 
-        /* 下部：意志投入・エネルギー同期ターミナル */
+        /* 生成プロダクト表示領域 */
+        .generated-app-card {
+            display: none;
+            width: 100%; max-width: 400px;
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(56, 189, 248, 0.6);
+            border-radius: 12px; padding: 10px;
+            font-size: 0.7rem; color: #f8fafc;
+            backdrop-filter: blur(20px);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .app-title { color: #38bdf8; font-weight: bold; margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 2px; }
+
         .terminal-card {
             width: 100%; max-width: 400px;
             background: rgba(2, 6, 23, 0.88);
             border: 1px solid rgba(59, 130, 246, 0.4);
-            border-radius: 16px; padding: 12px;
+            border-radius: 16px; padding: 10px;
             backdrop-filter: blur(20px);
-            display: flex; flex-direction: column; gap: 8px;
+            display: flex; flex-direction: column; gap: 6px;
         }
 
         .input-box { display: flex; gap: 6px; }
@@ -84,23 +99,23 @@
         input[type="text"] {
             flex: 1; background: rgba(10, 15, 30, 0.9);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 10px; padding: 10px 12px;
-            color: #fff; font-size: 0.8rem; outline: none;
+            border-radius: 10px; padding: 8px 10px;
+            color: #fff; font-size: 0.75rem; outline: none;
         }
 
         .action-btn {
             background: linear-gradient(135deg, #a855f7, #3b82f6);
             border: none; border-radius: 10px; color: white;
-            padding: 0 16px; font-weight: 600; font-size: 0.8rem;
+            padding: 0 14px; font-weight: 600; font-size: 0.75rem;
             cursor: pointer; white-space: nowrap;
             box-shadow: 0 4px 15px rgba(168, 85, 247, 0.4);
         }
 
         .logs {
-            font-family: monospace; font-size: 0.62rem; color: #38bdf8;
+            font-family: monospace; font-size: 0.6rem; color: #38bdf8;
             background: rgba(0, 0, 0, 0.6);
-            border-left: 3px solid #c084fc; padding: 6px 8px;
-            border-radius: 0 6px 6px 0; min-height: 48px; max-height: 60px;
+            border-left: 3px solid #c084fc; padding: 6px;
+            border-radius: 0 6px 6px 0; min-height: 44px; max-height: 55px;
             overflow-y: auto;
         }
     </style>
@@ -110,32 +125,34 @@
     <canvas id="bgCanvas"></canvas>
 
     <div class="os-container">
-        <!-- パネル -->
         <div class="status-card">
             <h1>AETHERIA OS</h1>
-            <div class="subtitle">BEYOND MICRO-PAYMENTS ENGINE</div>
+            <div class="subtitle">AI SWARM & CROSS-CHAIN ENGINE</div>
             <div class="metrics-grid">
-                <div>Settlement: <span class="highlight">ZERO-SETTLE</span></div>
-                <div>Flow Stream: <span id="flowRate">1,024 Res/s</span></div>
-                <div>Cross-Chain: <span style="color:#c084fc">EVM/Solana/BTC</span></div>
-                <div>Friction: <span class="highlight">0.000% (Absolute)</span></div>
+                <div>AI Agent: <span class="highlight">ACTIVE</span></div>
+                <div>Network: <span style="color:#c084fc">EVM & Solana</span></div>
+                <div>Mode: <span>Auto-Generation</span></div>
+                <div>Status: <span class="highlight">READY</span></div>
             </div>
         </div>
 
-        <!-- コア -->
         <div class="core-container">
-            <div class="core-orb" id="coreOrb" onclick="triggerSymbiosis()"></div>
+            <div class="core-orb" id="coreOrb" onclick="processIntent()"></div>
         </div>
 
-        <!-- 意志同期フォーム -->
+        <!-- AIが生成したアプリ構造のリアルタイム出力画面 -->
+        <div class="generated-app-card" id="appCard">
+            <div class="app-title" id="appTitle">⚡ 生成結果</div>
+            <div id="appBody">意志を解析中...</div>
+        </div>
+
         <div class="terminal-card">
             <div class="input-box">
-                <input type="text" id="intentInput" placeholder="決済を超えた意志（Intent）を投下...">
-                <button class="action-btn" onclick="triggerSymbiosis()">共鳴発現</button>
+                <input type="text" id="intentInput" placeholder="作りたいアプリや意図を入力 (例: 儲かるアプリ)">
+                <button class="action-btn" onclick="processIntent()">全自動構築</button>
             </div>
             <div class="logs" id="logBox">
-                > [Zero-Settle Engine] 従来的金銭決済を完全排除。<br>
-                > [Symbiosis] 全ブロックチェーン・AI流動性共鳴待機中...
+                > [Aetheria Engine] AIスウォーム & 全チェーン直接接続準備完了。
             </div>
         </div>
     </div>
@@ -153,19 +170,16 @@
         resize();
 
         const nodes = [];
-        const numNodes = 50;
+        const numNodes = 45;
 
         for (let i = 0; i < numNodes; i++) {
             nodes.push({
                 x: Math.random() * width, y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.7, vy: (Math.random() - 0.5) * 0.7,
-                energy: Math.random()
+                vx: (Math.random() - 0.5) * 0.6, vy: (Math.random() - 0.5) * 0.6
             });
         }
 
-        let time = 0;
         function render() {
-            time += 0.02;
             ctx.fillStyle = 'rgba(0, 2, 6, 0.25)';
             ctx.fillRect(0, 0, width, height);
 
@@ -180,30 +194,26 @@
                     let dx = n2.x - n1.x, dy = n2.y - n1.y;
                     let dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist < 130) {
-                        let alpha = (1 - dist / 130);
+                    if (dist < 120) {
                         ctx.beginPath();
                         ctx.moveTo(n1.x, n1.y); ctx.lineTo(n2.x, n2.y);
-                        ctx.strokeStyle = `rgba(56, 189, 248, ${alpha * 0.5})`;
+                        ctx.strokeStyle = `rgba(56, 189, 248, ${(1 - dist / 120) * 0.4})`;
                         ctx.lineWidth = 0.8; ctx.stroke();
                     }
                 }
-
-                ctx.beginPath();
-                ctx.arc(n1.x, n1.y, 2, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(168, 85, 247, ${Math.sin(time + n1.energy * 10) * 0.5 + 0.5})`;
-                ctx.fill();
             }
-
-            document.getElementById('flowRate').textContent = `${Math.floor(1000 + Math.sin(time) * 200)} Res/s`;
             requestAnimationFrame(render);
         }
         render();
 
-        function triggerSymbiosis() {
+        // 意志（Intent）自動解析・アプリ構築エンジン
+        function processIntent() {
             const input = document.getElementById('intentInput');
             const log = document.getElementById('logBox');
             const orb = document.getElementById('coreOrb');
+            const card = document.getElementById('appCard');
+            const title = document.getElementById('appTitle');
+            const body = document.getElementById('appBody');
             const val = input.value.trim();
 
             if (!val) {
@@ -211,16 +221,39 @@
                 return;
             }
 
-            orb.style.transform = "scale(1.25)";
+            // コア発光アニメーション
+            orb.style.transform = "scale(1.2)";
             orb.style.boxShadow = "0 0 90px rgba(16, 185, 129, 1), inset 0 0 30px rgba(255,255,255,1)";
             
+            log.innerHTML = `> [AI Swarm] 意志解析中: "${val}"...<br>> [Cross-Chain] アーキテクチャ自動設計開始。`;
+
             setTimeout(() => {
                 orb.style.transform = "scale(1)";
                 orb.style.boxShadow = "0 0 50px rgba(168, 85, 247, 0.8), inset 0 0 20px rgba(255,255,255,0.9)";
-            }, 700);
+                
+                // 入力内容に応じた高度な自動生成モックレスポンス
+                card.style.display = "block";
+                
+                if (val.includes("儲かる") || val.includes("収益") || val.includes("アプリ")) {
+                    title.textContent = "🚀 自動構築: クロスチェーン流動性自動運用DApp";
+                    body.innerHTML = `
+                        <b>【設計アーキテクチャ】</b><br>
+                        • <b>EVM/Solana</b>: DEX間アービトラージ自動実行AIエージェント<br>
+                        • <b>収益ロジック</b>: 全チェーンの価格差をミリ秒検知し、ガス最安ルートで自動収益化<br>
+                        • <b>状態</b>: スマートコントラクト自動展開準備完了
+                    `;
+                } else {
+                    title.textContent = `🌌 自動構築: ${val} システム基盤`;
+                    body.innerHTML = `
+                        <b>【設計アーキテクチャ】</b><br>
+                        • <b>AIプロトコル</b>: 分散型ノードによる意志（Intent）即時実行モデル<br>
+                        • <b>状態</b>: 全ブロックチェーン・Aetheria OSコアへ完全同調完了
+                    `;
+                }
 
-            log.innerHTML = `> [Intent Ingest] 意志受容: "${val}"<br>> [Zero-Settle Stream] 決済発生0。全チェーンAI流動性と自律同調完了。`;
-            input.value = "";
+                log.innerHTML += `<br>> [Complete] アプリケーション設計図の動的展開が完了しました。`;
+                input.value = "";
+            }, 1000);
         }
     </script>
 </body>
