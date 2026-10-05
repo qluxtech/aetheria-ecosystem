@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AETHERIA OS</title>
+    <title>AETHERIA OS - Quantum Core</title>
     <script src="https://unpkg.com/bsv@2.0.10/bsv.min.js"></script>
     <style>
         :root {
-            --bg-color: #030712;
-            --panel-bg: rgba(15, 23, 42, 0.7);
-            --border-color: rgba(255, 255, 255, 0.1);
+            --bg-color: #02040a;
+            --panel-bg: rgba(10, 16, 30, 0.75);
+            --border-color: rgba(255, 255, 255, 0.12);
             --accent-cyan: #38bdf8;
             --accent-purple: #818cf8;
             --text-main: #f8fafc;
@@ -40,14 +40,23 @@
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
             border-radius: 20px; padding: 14px 18px;
-            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(35px); -webkit-backdrop-filter: blur(35px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+            position: relative; overflow: hidden;
         }
+
+        /* 光のグラデーションボーダー */
+        .status-card::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            animation: borderGlow 4s infinite linear;
+        }
+        @keyframes borderGlow { 0% { left: -100%; } 100% { left: 100%; } }
 
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
 
         .brand-logo {
-            font-size: 0.8rem; font-weight: 600; letter-spacing: 0.3em;
+            font-size: 0.82rem; font-weight: 700; letter-spacing: 0.35em;
             color: var(--text-main); text-transform: uppercase;
             display: flex; align-items: center; gap: 8px;
         }
@@ -55,17 +64,23 @@
         .brand-logo::before {
             content: ''; display: inline-block; width: 6px; height: 6px;
             background: var(--accent-cyan); border-radius: 50%;
-            box-shadow: 0 0 10px var(--accent-cyan);
+            box-shadow: 0 0 12px var(--accent-cyan);
         }
 
         .wallet-btn {
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15); color: var(--text-main);
-            border-radius: 100px; padding: 5px 14px;
-            font-size: 0.65rem; font-weight: 500; cursor: pointer;
-            transition: all 0.25s ease;
+            border: 1px solid rgba(255, 255, 255, 0.18); color: var(--text-main);
+            border-radius: 100px; padding: 6px 16px;
+            font-size: 0.65rem; font-weight: 600; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.1);
         }
-        .wallet-btn:hover { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.3); }
+        .wallet-btn:hover {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+            transform: translateY(-1px);
+        }
 
         .metrics-grid {
             display: flex; flex-direction: column; gap: 3px;
@@ -81,25 +96,25 @@
         }
 
         #coreCanvas {
-            width: 320px; height: 320px;
+            width: 340px; height: 340px;
             cursor: pointer;
         }
 
         /* 出力結果カード */
         .generated-app-card {
             display: none; width: 100%; max-width: 420px;
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(56, 189, 248, 0.3);
+            background: rgba(10, 16, 30, 0.88);
+            border: 1px solid rgba(56, 189, 248, 0.4);
             border-radius: 20px; padding: 16px;
             font-size: 0.72rem; color: var(--text-main); line-height: 1.6;
-            backdrop-filter: blur(30px);
+            backdrop-filter: blur(35px);
             animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.15);
         }
 
-        @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-        .app-title { color: var(--accent-cyan); font-weight: 600; margin-bottom: 8px; font-size: 0.75rem; letter-spacing: 0.05em; text-transform: uppercase; }
+        .app-title { color: var(--accent-cyan); font-weight: 700; margin-bottom: 8px; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; }
 
         /* 画面下部：プロンプト入力 */
         .terminal-card {
@@ -107,9 +122,9 @@
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
             border-radius: 24px; padding: 8px;
-            backdrop-filter: blur(30px);
+            backdrop-filter: blur(35px);
             display: flex; flex-direction: column; gap: 8px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.15);
         }
 
         .input-box {
@@ -117,9 +132,12 @@
             background: rgba(255, 255, 255, 0.03);
             border-radius: 18px; padding: 4px 6px 4px 14px;
             border: 1px solid rgba(255, 255, 255, 0.08);
-            transition: border-color 0.2s ease;
+            transition: all 0.3s ease;
         }
-        .input-box:focus-within { border-color: rgba(56, 189, 248, 0.5); }
+        .input-box:focus-within {
+            border-color: rgba(56, 189, 248, 0.6);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+        }
 
         input[type="text"] {
             flex: 1; background: transparent; border: none;
@@ -128,15 +146,19 @@
         input[type="text"]::placeholder { color: rgba(255, 255, 255, 0.3); }
 
         .action-btn {
-            background: #ffffff; border: none; border-radius: 14px; color: #030712;
-            padding: 10px 18px; font-weight: 600; font-size: 0.75rem;
-            cursor: pointer; white-space: nowrap; transition: all 0.2s ease;
+            background: linear-gradient(135deg, #ffffff, #e2e8f0); border: none; border-radius: 14px; color: #02040a;
+            padding: 10px 20px; font-weight: 700; font-size: 0.75rem;
+            cursor: pointer; white-space: nowrap; transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
         }
-        .action-btn:hover { background: #f1f5f9; transform: scale(1.02); }
+        .action-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
+        }
 
         .logs {
             font-family: ui-monospace, "SF Mono", monospace; font-size: 0.6rem; color: var(--text-sub);
-            padding: 2px 8px; max-height: 38px; overflow-y: auto; line-height: 1.4; opacity: 0.8;
+            padding: 2px 8px; max-height: 38px; overflow-y: auto; line-height: 1.4; opacity: 0.85;
         }
     </style>
 </head>
@@ -151,7 +173,7 @@
                 <button class="wallet-btn" onclick="connectBSVWallet()">Sync Wallet</button>
             </div>
             <div class="metrics-grid">
-                <div>Engine: BSV Zero-Settlement</div>
+                <div>Engine: BSV Zero-Settlement Layer</div>
                 <div>Target: <span class="address-box">1Mb66iHohUEg8eAnkgV9uTTV7R235tuy95</span></div>
             </div>
         </div>
@@ -179,25 +201,6 @@
     <script>
         const TARGET_BSV_ADDRESS = "1Mb66iHohUEg8eAnkgV9uTTV7R235tuy95";
 
-        // 背景描画
-        const bgCanvas = document.getElementById('bgCanvas');
-        const bgCtx = bgCanvas.getContext('2d');
-        let width, height;
-
-        function resize() {
-            width = bgCanvas.width = window.innerWidth;
-            height = bgCanvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        function renderBg() {
-            bgCtx.fillStyle = '#030712';
-            bgCtx.fillRect(0, 0, width, height);
-            requestAnimationFrame(renderBg);
-        }
-        renderBg();
-
         // 1/f ゆらぎアルゴリズム
         class PinkNoise {
             constructor() { this.b = [0,0,0,0,0,0,0]; }
@@ -214,26 +217,61 @@
                 return (pink / 5) + 0.5;
             }
         }
+        const pinkNoise = new PinkNoise();
 
-        // 超ハイクオリティ 3D量子メッシュコア Canvas
+        // 背景アンビエント光・グラデーション描画
+        const bgCanvas = document.getElementById('bgCanvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        let width, height;
+
+        function resize() {
+            width = bgCanvas.width = window.innerWidth;
+            height = bgCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        let ambientTime = 0;
+        function renderBg() {
+            ambientTime += 0.005;
+            bgCtx.fillStyle = '#02040a';
+            bgCtx.fillRect(0, 0, width, height);
+
+            // 1/f呼吸と同期する背景オーロラブラー
+            const bgGlow = bgCtx.createRadialGradient(
+                width / 2, height / 2, 50,
+                width / 2, height / 2, Math.max(width, height) * 0.6
+            );
+            const auraScale = 0.12 + Math.sin(ambientTime) * 0.04;
+            bgGlow.addColorStop(0, `rgba(56, 189, 248, ${auraScale})`);
+            bgGlow.addColorStop(0.5, `rgba(129, 140, 248, ${auraScale * 0.5})`);
+            bgGlow.addColorStop(1, 'rgba(2, 4, 10, 0)');
+
+            bgCtx.fillStyle = bgGlow;
+            bgCtx.fillRect(0, 0, width, height);
+
+            requestAnimationFrame(renderBg);
+        }
+        renderBg();
+
+        // 3D量子メッシュコア Canvas
         const coreCanvas = document.getElementById('coreCanvas');
         const coreCtx = coreCanvas.getContext('2d');
-        coreCanvas.width = 320; coreCanvas.height = 320;
+        coreCanvas.width = 340; coreCanvas.height = 340;
 
-        const pinkNoise = new PinkNoise();
-        const particleCount = 180;
+        const particleCount = 220;
         const particles = [];
 
         for (let i = 0; i < particleCount; i++) {
             const theta = Math.random() * Math.PI * 2;
             const phi = Math.acos((Math.random() * 2) - 1);
-            const radius = 80 + Math.random() * 10;
+            const radius = 85 + Math.random() * 12;
             particles.push({
                 x: radius * Math.sin(phi) * Math.cos(theta),
                 y: radius * Math.sin(phi) * Math.sin(theta),
                 z: radius * Math.cos(phi),
-                size: Math.random() * 1.8 + 1.0,
-                color: Math.random() > 0.4 ? '#38bdf8' : '#818cf8'
+                size: Math.random() * 2.0 + 0.8,
+                color: Math.random() > 0.35 ? '#38bdf8' : '#818cf8'
             });
         }
 
@@ -241,26 +279,31 @@
         let angleX = 0;
         let smoothFluctuation = 0.5;
         let boostRadius = 1.0;
+        let mouseX = 0, mouseY = 0;
+
+        // タッチ・マウス位置追従
+        window.addEventListener('mousemove', (e) => {
+            mouseX = (e.clientX - window.innerWidth / 2) * 0.0001;
+            mouseY = (e.clientY - window.innerHeight / 2) * 0.0001;
+        });
 
         function draw3DRing(cx, cy, radius, rotX, rotY, color, lineWidth) {
             coreCtx.save();
             coreCtx.beginPath();
-            const segments = 80;
+            const segments = 90;
             for (let i = 0; i <= segments; i++) {
                 const a = (i / segments) * Math.PI * 2;
                 let rx = radius * Math.cos(a);
                 let ry = 0;
                 let rz = radius * Math.sin(a);
 
-                // Y回転
                 let x1 = rx * Math.cos(rotY) - rz * Math.sin(rotY);
                 let z1 = rz * Math.cos(rotY) + rx * Math.sin(rotY);
 
-                // X回転
                 let y2 = ry * Math.cos(rotX) - z1 * Math.sin(rotX);
                 let z2 = z1 * Math.cos(rotX) + ry * Math.sin(rotX);
 
-                const scale = (z2 + 200) / 400;
+                const scale = (z2 + 220) / 440;
                 const px = cx + x1 * scale;
                 const py = cy + y2 * scale;
 
@@ -274,33 +317,34 @@
         }
 
         function renderQuantumCore() {
-            coreCtx.clearRect(0, 0, 320, 320);
+            coreCtx.clearRect(0, 0, 340, 340);
             
             const targetNoise = pinkNoise.next();
             smoothFluctuation += (targetNoise - smoothFluctuation) * 0.04;
-            const currentScale = boostRadius * (0.9 + smoothFluctuation * 0.2);
+            const currentScale = boostRadius * (0.9 + smoothFluctuation * 0.22);
 
-            const cx = 160, cy = 160;
-            angleY += 0.006;
-            angleX += 0.003;
+            const cx = 170, cy = 170;
+            angleY += 0.007 + mouseX;
+            angleX += 0.0035 + mouseY;
 
-            // 中心エネルギーコア（マルチレイヤー・グロー）
-            const coreGlow = coreCtx.createRadialGradient(cx, cy, 0, cx, cy, 90 * currentScale);
-            coreGlow.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
-            coreGlow.addColorStop(0.2, 'rgba(56, 189, 248, 0.6)');
-            coreGlow.addColorStop(0.5, 'rgba(129, 140, 248, 0.2)');
-            coreGlow.addColorStop(1, 'rgba(3, 7, 18, 0)');
+            // マルチレイヤー・超高輝度発光コア
+            const coreGlow = coreCtx.createRadialGradient(cx, cy, 0, cx, cy, 100 * currentScale);
+            coreGlow.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+            coreGlow.addColorStop(0.18, 'rgba(56, 189, 248, 0.7)');
+            coreGlow.addColorStop(0.48, 'rgba(129, 140, 248, 0.25)');
+            coreGlow.addColorStop(1, 'rgba(2, 4, 10, 0)');
 
             coreCtx.fillStyle = coreGlow;
             coreCtx.beginPath();
-            coreCtx.arc(cx, cy, 90 * currentScale, 0, Math.PI * 2);
+            coreCtx.arc(cx, cy, 100 * currentScale, 0, Math.PI * 2);
             coreCtx.fill();
 
-            // 3Dアークリングの描画（SF感のある立体オービット）
-            draw3DRing(cx, cy, 105 * currentScale, angleX * 1.5, angleY * 1.2, 'rgba(56, 189, 248, 0.4)', 1.2);
-            draw3DRing(cx, cy, 120 * currentScale, -angleX * 1.2, angleY * 0.8, 'rgba(129, 140, 248, 0.25)', 0.8);
+            // SF感のある外周オービットリング（3層）
+            draw3DRing(cx, cy, 112 * currentScale, angleX * 1.5, angleY * 1.2, 'rgba(56, 189, 248, 0.45)', 1.4);
+            draw3DRing(cx, cy, 128 * currentScale, -angleX * 1.2, angleY * 0.8, 'rgba(129, 140, 248, 0.3)', 1.0);
+            draw3DRing(cx, cy, 142 * currentScale, angleX * 0.8, -angleY * 1.5, 'rgba(56, 189, 248, 0.15)', 0.6);
 
-            // 粒子3D変換計算
+            // 粒子3D座標変換
             const projected = particles.map(p => {
                 let x1 = p.x * Math.cos(angleY) - p.z * Math.sin(angleY);
                 let z1 = p.z * Math.cos(angleY) + p.x * Math.sin(angleY);
@@ -308,7 +352,7 @@
                 let y2 = p.y * Math.cos(angleX) - z1 * Math.sin(angleX);
                 let z2 = z1 * Math.cos(angleX) + p.y * Math.sin(angleX);
 
-                const scale = (z2 + 200) / 400 * currentScale;
+                const scale = (z2 + 220) / 440 * currentScale;
                 return {
                     x: cx + x1 * scale,
                     y: cy + y2 * scale,
@@ -318,19 +362,19 @@
                 };
             });
 
-            // 粒子間のネットワークメッシュ線描画
+            // 量子メッシュ接続線
             for (let i = 0; i < projected.length; i++) {
                 for (let j = i + 1; j < projected.length; j++) {
                     const dx = projected[i].x - projected[j].x;
                     const dy = projected[i].y - projected[j].y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
 
-                    if (dist < 38) {
+                    if (dist < 40) {
                         coreCtx.beginPath();
                         coreCtx.moveTo(projected[i].x, projected[i].y);
                         coreCtx.lineTo(projected[j].x, projected[j].y);
-                        coreCtx.strokeStyle = `rgba(56, 189, 248, ${(1 - dist / 38) * 0.35})`;
-                        coreCtx.lineWidth = 0.5;
+                        coreCtx.strokeStyle = `rgba(56, 189, 248, ${(1 - dist / 40) * 0.4})`;
+                        coreCtx.lineWidth = 0.6;
                         coreCtx.stroke();
                     }
                 }
@@ -362,8 +406,8 @@
             const body = document.getElementById('appBody');
             const val = input.value.trim() || "Autonomous Protocol Run";
 
-            boostRadius = 1.3;
-            setTimeout(() => { boostRadius = 1.0; }, 500);
+            boostRadius = 1.4;
+            setTimeout(() => { boostRadius = 1.0; }, 600);
 
             log.innerHTML = `> Executing: "${val}"<br>> Routing to ${TARGET_BSV_ADDRESS.slice(0,8)}...`;
 
